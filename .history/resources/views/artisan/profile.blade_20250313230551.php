@@ -1,0 +1,402 @@
+@extends('layouts.artisan')
+
+@section('title', 'Artisan Profile')
+
+@section('content')
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h1 class="text-2xl font-semibold text-amber-800 mb-6">My Profile</h1>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Profile Information -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-amber-50 p-6 rounded-lg shadow">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-32 h-32 rounded-full overflow-hidden mb-4">
+                                        @if ($artisanProfile->profile_photo)
+                                            <img src="{{ Storage::url('profile_photos/' . $artisanProfile->profile_photo) }}"
+                                                alt="{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}"
+                                                class="w-full h-full object-cover">
+                                        @else
+                                            <div
+                                                class="w-full h-full bg-amber-200 flex items-center justify-center text-amber-600 text-3xl font-bold">
+                                                {{ strtoupper(substr(Auth::user()->firstname, 0, 1) . substr(Auth::user()->lastname, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <h2 class="text-xl font-medium">{{ Auth::user()->firstname }}
+                                        {{ Auth::user()->lastname }}</h2>
+                                    <p class="text-gray-500">{{ $artisanProfile->profession ?? 'Artisan' }}</p>
+
+                                    <form action="{{ route('artisan.profile.photo') }}" method="POST"
+                                        enctype="multipart/form-data" class="mt-4">
+                                        @csrf
+                                        <input type="file" name="photo" id="photo" class="hidden"
+                                            onchange="this.form.submit()">
+                                        <label for="photo"
+                                            class="inline-flex items-center px-4 py-2 bg-amber-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-amber-700 active:bg-amber-900 focus:outline-none focus:border-amber-900 focus:ring ring-amber-300 disabled:opacity-25 transition ease-in-out duration-150 cursor-pointer">
+                                            <i class="fas fa-camera mr-2"></i> Update Photo
+                                        </label>
+                                    </form>
+                                </div>
+
+                                <div class="mt-6">
+                                    <h3 class="font-medium text-gray-700 mb-2">Contact Information</h3>
+                                    <div class="space-y-2 text-sm">
+                                        <p class="flex items-center">
+                                            <i class="fas fa-envelope text-amber-600 mr-2 w-5"></i>
+                                            {{ Auth::user()->email }}
+                                        </p>
+                                        <p class="flex items-center">
+                                            <i class="fas fa-phone text-amber-600 mr-2 w-5"></i>
+                                            {{ $artisanProfile->phone ?? '+33 1 23 45 67 89' }}
+                                        </p>
+                                        <p class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-amber-600 mr-2 w-5"></i>
+                                            {{ $artisanProfile->full_address ?? 'Paris, France' }}
+                                        </p>
+                                    </div>
+
+                                    <button type="button" onclick="toggleModal('contactInfoModal')"
+                                        class="mt-4 w-full inline-flex justify-center items-center px-3 py-1 bg-amber-100 text-amber-600 border border-transparent rounded-md font-medium text-xs uppercase tracking-widest hover:bg-amber-200 active:bg-amber-300 focus:outline-none focus:ring ring-amber-200 transition ease-in-out duration-150">
+                                        <i class="fas fa-edit mr-1"></i> Edit Contact Info
+                                    </button>
+                                </div>
+
+                                <div class="mt-6">
+                                    <h3 class="font-medium text-gray-700 mb-2">Business Information</h3>
+                                    <div class="space-y-2 text-sm">
+                                        <p class="flex items-center">
+                                            <i class="fas fa-building text-amber-600 mr-2 w-5"></i>
+                                            {{ $artisanProfile->business_name ?? 'Not specified' }}
+                                        </p>
+                                        <p class="flex items-center">
+                                            <i class="fas fa-id-card text-amber-600 mr-2 w-5"></i>
+                                            Reg: {{ $artisanProfile->business_registration_number ?? 'Not specified' }}
+                                        </p>
+                                    </div>
+
+                                    <button type="button" onclick="toggleModal('businessInfoModal')"
+                                        class="mt-4 w-full inline-flex justify-center items-center px-3 py-1 bg-amber-100 text-amber-600 border border-transparent rounded-md font-medium text-xs uppercase tracking-widest hover:bg-amber-200 active:bg-amber-300 focus:outline-none focus:ring ring-amber-200 transition ease-in-out duration-150">
+                                        <i class="fas fa-edit mr-1"></i> Edit Business Info
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Details -->
+                        <div class="lg:col-span-2">
+                            <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-medium text-gray-800">Professional Information</h3>
+                                    <button
+                                        class="inline-flex items-center px-3 py-1 bg-amber-100 text-amber-600 border border-transparent rounded-md font-medium text-xs uppercase tracking-widest hover:bg-amber-200 active:bg-amber-300 focus:outline-none focus:ring ring-amber-200 transition ease-in-out duration-150">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </button>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">Profession</h4>
+                                        <p class="mt-1">Professional Craftsman</p>
+                                    </div>
+
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">About Me</h4>
+                                        <p class="mt-1 text-sm text-gray-600">
+                                            Professional with over 10 years of experience in traditional craftsmanship.
+                                            I specialize in high-quality work with attention to detail and customer
+                                            satisfaction.
+                                            Licensed and insured, offering reliable and affordable solutions for all your
+                                            needs.
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-500">Skills & Expertise</h4>
+                                        <div class="mt-2 flex flex-wrap gap-2">
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-amber-100 text-amber-800">
+                                                Craftsmanship
+                                            </span>
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-amber-100 text-amber-800">
+                                                Woodworking
+                                            </span>
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-amber-100 text-amber-800">
+                                                Restoration
+                                            </span>
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-amber-100 text-amber-800">
+                                                Custom Furniture
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow border border-gray-100 mt-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-medium text-gray-800">Work Experience</h3>
+                                    <button type="button" onclick="toggleModal('workExperienceModal')"
+                                        class="inline-flex items-center px-3 py-1 bg-amber-100 text-amber-600 border border-transparent rounded-md font-medium text-xs uppercase tracking-widest hover:bg-amber-200 active:bg-amber-300 focus:outline-none focus:ring ring-amber-200 transition ease-in-out duration-150">
+                                        <i class="fas fa-plus mr-1"></i> Add
+                                    </button>
+                                </div>
+
+                                <div class="space-y-6">
+                                    @forelse($workExperiences as $experience)
+                                        <div class="border-l-2 border-amber-500 pl-4">
+                                            <h4 class="font-medium">
+                                                {{ $experience->title }}{{ $experience->company ? ', ' . $experience->company : '' }}
+                                            </h4>
+                                            <p class="text-sm text-gray-500">{{ $experience->date_range }}</p>
+                                            <p class="mt-1 text-sm">{{ $experience->description }}</p>
+                                        </div>
+                                    @empty
+                                        <div class="border-l-2 border-amber-500 pl-4">
+                                            <h4 class="font-medium">Self-Employed Craftsman</h4>
+                                            <p class="text-sm text-gray-500">2018 - Present</p>
+                                            <p class="mt-1 text-sm">Providing comprehensive crafting services to residential
+                                                and
+                                                commercial clients.</p>
+                                        </div>
+
+                                        <div class="border-l-2 border-amber-500 pl-4">
+                                            <h4 class="font-medium">Senior Craftsman, Paris Artisans Co.</h4>
+                                            <p class="text-sm text-gray-500">2013 - 2018</p>
+                                            <p class="mt-1 text-sm">Led a team of junior craftsmen in creating custom pieces
+                                                and
+                                                renovations.</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow border border-gray-100 mt-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-medium text-gray-800">Certifications</h3>
+                                    <button type="button" onclick="toggleModal('certificationModal')"
+                                        class="inline-flex items-center px-3 py-1 bg-amber-100 text-amber-600 border border-transparent rounded-md font-medium text-xs uppercase tracking-widest hover:bg-amber-200 active:bg-amber-300 focus:outline-none focus:ring ring-amber-200 transition ease-in-out duration-150">
+                                        <i class="fas fa-plus mr-1"></i> Add
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h4 class="font-medium">Master Craftsman License</h4>
+                                        <p class="text-sm text-gray-500">Issued by: French Crafts Association</p>
+                                        <p class="text-sm text-gray-500">Valid until: 2025</p>
+                                    </div>
+
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h4 class="font-medium">Traditional Methods Certification</h4>
+                                        <p class="text-sm text-gray-500">Issued by: European Craft Council</p>
+                                        <p class="text-sm text-gray-500">Valid until: 2024</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Work Experience Modal -->
+    <div id="workExperienceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Add Work Experience</h3>
+                <form class="mt-4" action="{{ route('artisan.profile.work-experience') }}" method="POST">
+                    @csrf
+                    <div class="mb-4 text-left">
+                        <label for="title" class="block text-sm font-medium text-gray-700">Job Title</label>
+                        <input type="text" name="title" id="title"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                        <input type="text" name="company" id="company"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-4 text-left">
+                            <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <input type="date" name="start_date" id="start_date"
+                                class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="mb-4 text-left">
+                            <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+                            <input type="date" name="end_date" id="end_date"
+                                class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <div class="mb-4 text-left">
+                        <div class="flex items-center">
+                            <input type="checkbox" name="is_current" id="is_current"
+                                class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded">
+                            <label for="is_current" class="ml-2 block text-sm text-gray-900">Current Position</label>
+                        </div>
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea name="description" id="description" rows="3"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="flex justify-between mt-5">
+                        <button type="button" onclick="toggleModal('workExperienceModal')"
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-md">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certification Modal -->
+    <div id="certificationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Add Certification</h3>
+                <form class="mt-4" action="{{ route('artisan.profile.certification') }}" method="POST">
+                    @csrf
+                    <div class="mb-4 text-left">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Certification Name</label>
+                        <input type="text" name="name" id="name"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="issuer" class="block text-sm font-medium text-gray-700">Issuing Organization</label>
+                        <input type="text" name="issuer" id="issuer"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="valid_until" class="block text-sm font-medium text-gray-700">Valid Until</label>
+                        <input type="date" name="valid_until" id="valid_until"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="flex justify-between mt-5">
+                        <button type="button" onclick="toggleModal('certificationModal')"
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-md">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Info Modal -->
+    <div id="contactInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Update Contact Information</h3>
+                <form class="mt-4" action="{{ route('artisan.profile.contact-info') }}" method="POST">
+                    @csrf
+                    <div class="mb-4 text-left">
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="text" name="phone" id="phone" value="{{ $artisanProfile->phone }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                        <input type="text" name="address" id="address" value="{{ $artisanProfile->address }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                        <input type="text" name="city" id="city" value="{{ $artisanProfile->city }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                        <input type="text" name="country" id="country" value="{{ $artisanProfile->country }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="postal_code" class="block text-sm font-medium text-gray-700">Postal Code</label>
+                        <input type="text" name="postal_code" id="postal_code"
+                            value="{{ $artisanProfile->postal_code }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="flex justify-between mt-5">
+                        <button type="button" onclick="toggleModal('contactInfoModal')"
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-md">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Business Info Modal -->
+    <div id="businessInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Update Business Information</h3>
+                <form class="mt-4" action="{{ route('artisan.profile.business-info') }}" method="POST">
+                    @csrf
+                    <div class="mb-4 text-left">
+                        <label for="business_name" class="block text-sm font-medium text-gray-700">Business Name</label>
+                        <input type="text" name="business_name" id="business_name"
+                            value="{{ $artisanProfile->business_name }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="business_registration_number"
+                            class="block text-sm font-medium text-gray-700">Registration Number</label>
+                        <input type="text" name="business_registration_number" id="business_registration_number"
+                            value="{{ $artisanProfile->business_registration_number }}"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label for="insurance_details" class="block text-sm font-medium text-gray-700">Insurance
+                            Details</label>
+                        <textarea name="insurance_details" id="insurance_details" rows="3"
+                            class="mt-1 focus:ring-amber-500 focus:border-amber-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{{ $artisanProfile->insurance_details }}</textarea>
+                    </div>
+                    <div class="flex justify-between mt-5">
+                        <button type="button" onclick="toggleModal('businessInfoModal')"
+                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-md">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const isCurrentCheckbox = document.getElementById('is_current');
+            const endDateInput = document.getElementById('end_date');
+
+            if (isCurrentCheckbox && endDateInput) {
+                isCurrentCheckbox.addEventListener('change', function() {
+                    endDateInput.disabled = this.checked;
+                    if (this.checked) {
+                        endDateInput.value = '';
+                    }
+                });
+            }
+        });
+    </script>
+@endsection

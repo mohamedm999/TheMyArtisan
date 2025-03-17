@@ -1,0 +1,17 @@
+Expected image paths:
+
+Background Images:
+/images/backgrounds/Crafts-1.jpg
+/images/backgrounds/pottery-artisan.jpg
+/images/backgrounds/textile-weaving.jpg
+/images/backgrounds/metal-crafting.jpg
+
+Product Images:
+/images/products/zellige-tile-work.jpg
+/images/products/berber-rugs.jpg
+/images/products/copper-lanterns.jpg
+/images/products/leather-goods.jpg
+
+Default Images:
+/images/default-product.jpg
+/images/default-thumbnail.jpg
