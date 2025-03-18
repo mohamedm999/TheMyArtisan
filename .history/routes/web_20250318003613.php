@@ -146,6 +146,8 @@ Route::middleware(['auth', 'role:artisan'])->prefix('artisan')->name('artisan.')
     Route::delete('/profile/certification/{id}', [App\Http\Controllers\Artisan\ArtisanProfileController::class, 'deleteCertification'])->name('profile.certification.delete');
     Route::post('/profile/contact-info', [App\Http\Controllers\Artisan\ArtisanProfileController::class, 'updateContactInfo'])->name('profile.contact-info');
     Route::post('/profile/business-info', [App\Http\Controllers\Artisan\ArtisanProfileController::class, 'updateBusinessInfo'])->name('profile.business-info');
+   
+
 });
 
 // Client routes

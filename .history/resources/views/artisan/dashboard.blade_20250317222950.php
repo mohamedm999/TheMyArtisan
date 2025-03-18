@@ -9,6 +9,49 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h1 class="text-2xl font-semibold text-amber-800 mb-6">Artisan Dashboard</h1>
 
+                    <!-- Add this to your artisan dashboard in a prominent location -->
+                    <div class="mb-6 p-4 bg-white rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold mb-4">Availability Status</h3>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p>You are currently:
+                                    @if (auth()->user()->artisanProfile->is_available)
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                            <span class="w-2 h-2 mr-1 bg-green-500 rounded-full"></span> Available for Work
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                                            <span class="w-2 h-2 mr-1 bg-gray-500 rounded-full"></span> Not Available
+                                        </span>
+                                    @endif
+                                </p>
+                                <p class="mt-2 text-gray-600 text-sm">
+                                    @if (auth()->user()->artisanProfile->is_available)
+                                        Clients can now find you in searches and send you booking requests.
+                                    @else
+                                        You are currently hidden from new client searches and cannot receive new booking
+                                        requests.
+                                    @endif
+                                </p>
+                            </div>
+                            <form action="{{ route('artisan.profile.toggle-availability') }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="px-4 py-2 rounded-md text-sm font-medium
+                                    @if (auth()->user()->artisanProfile->is_available) bg-gray-600 hover:bg-gray-700 text-white
+                                    @else
+                                        bg-green-600 hover:bg-green-700 text-white @endif">
+                                    @if (auth()->user()->artisanProfile->is_available)
+                                        Set as Unavailable
+                                    @else
+                                        Set as Available
+                                    @endif
+                                </button>
+                            </form>
+                        </div>
+                    </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Profile Summary Card -->

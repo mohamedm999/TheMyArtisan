@@ -11,17 +11,7 @@
 
                     @php
                         // Define $status with a default value if it's not set
-$status = $status ?? 'all';
-// Initialize $bookings as an empty collection if it's not defined
-                        $bookings = $bookings ?? collect();
-                        // Initialize $counts array if not defined
-                        $counts = $counts ?? [
-                            'pending' => 0,
-                            'confirmed' => 0,
-                            'in_progress' => 0,
-                            'completed' => 0,
-                            'cancelled' => 0,
-                        ];
+                        $status = $status ?? 'all';
                     @endphp
 
                     <!-- Booking Tabs -->

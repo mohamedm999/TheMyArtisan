@@ -27,9 +27,9 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login']);
 
-    // Register - make sure both routes exist and are properly defined
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+    // Register
+    Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register', [RegisterController::class, 'register']);
 
     // Password Reset
     Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -146,6 +146,9 @@ Route::middleware(['auth', 'role:artisan'])->prefix('artisan')->name('artisan.')
     Route::delete('/profile/certification/{id}', [App\Http\Controllers\Artisan\ArtisanProfileController::class, 'deleteCertification'])->name('profile.certification.delete');
     Route::post('/profile/contact-info', [App\Http\Controllers\Artisan\ArtisanProfileController::class, 'updateContactInfo'])->name('profile.contact-info');
     Route::post('/profile/business-info', [App\Http\Controllers\Artisan\ArtisanProfileController::class, 'updateBusinessInfo'])->name('profile.business-info');
+    Route::post('/profile/toggle-availability', [App\Http\Controllers\Artisan\ProfileController::class, 'toggleAvailability'])
+        ->name('profile.toggle-availability');
+
 });
 
 // Client routes

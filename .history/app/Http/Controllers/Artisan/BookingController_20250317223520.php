@@ -21,14 +21,10 @@ class BookingController extends Controller
         $user = auth()->user();
 
         // Get bookings based on status
-        $query = $user->bookings()->with(['customer', 'service']);
-
-        // Only filter by status if it's not 'all'
-        if ($status !== 'all') {
-            $query->where('status', $status);
-        }
-
-        $bookings = $query->orderBy('created_at', 'desc')
+        $bookings = $user->bookings()
+            ->with(['customer', 'service'])
+            ->where('status', $status)
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         // Get counts for each status
@@ -39,6 +35,9 @@ class BookingController extends Controller
             'completed' => $user->bookings()->where('status', 'completed')->count(),
             'cancelled' => $user->bookings()->where('status', 'cancelled')->count(),
         ];
+
+        // Add this line to define the $status variable
+        $status = request('status', 'all'); // Default to 'all' if not provided
 
         return view('artisan.bookings', compact('bookings', 'status', 'counts'));
     }
