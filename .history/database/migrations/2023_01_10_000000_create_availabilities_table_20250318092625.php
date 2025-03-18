@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('availabilities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('artisan_profile_id')->constrained()->onDelete('cascade');
+            $table->foreignId('artisan_profiles_id')->constrained()->onDelete('cascade');
+            
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->foreignId('booking_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
 
-            $table->index(['artisan_profile_id', 'date']);
+            $table->index(['artisan_id', 'date']);
         });
     }
 

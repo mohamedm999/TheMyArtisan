@@ -68,7 +68,7 @@ class ArtisanProfileController extends Controller
 
                 if (Schema::hasTable('certifications')) {
                     // Log the raw SQL query
-                    $query = Certification::where('artisan_profiles_id', $artisanProfile->id);
+                    $query = Certification::where('artisan_profile_id', $artisanProfile->id);
                     $debugInfo['cert_query'] = $query->toSql();
                     $debugInfo['cert_bindings'] = $query->getBindings();
 

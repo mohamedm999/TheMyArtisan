@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('availabilities', function (Blueprint $table) {
+        Schema::create('certifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('artisan_profile_id')->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->enum('status', ['available', 'booked', 'unavailable'])->default('available');
-            $table->foreignId('booking_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('title');
+            $table->string('issuing_organization');
+            $table->date('issue_date')->nullable();
+            $table->date('expiry_date')->nullable();
+            $table->string('credential_id')->nullable();
+            $table->string('credential_url')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
-
-            $table->index(['artisan_profile_id', 'date']);
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('availabilities');
+        Schema::dropIfExists('certifications');
     }
 };
