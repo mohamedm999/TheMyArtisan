@@ -5,22 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ArtisanService extends Model
+class WorkExperience extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'artisan_profile_id',
-        'name',
+        'position',
+        'company_name',
+        'start_date',
+        'end_date',
+        'is_current',
         'description',
-        'category',
-        'price',
-        'duration',
-        'is_available'
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_current' => 'boolean',
     ];
 
     /**
-     * Get the artisan profile that owns the service.
+     * Get the artisan profile that owns the work experience.
      */
     public function artisanProfile()
     {
