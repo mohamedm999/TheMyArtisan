@@ -84,6 +84,35 @@ class User extends Authenticatable
         return $this->hasOne(ClientProfile::class);
     }
 
+    /**
+     * Get the bookings for the artisan user through their artisan profile.
+     */
+    public function bookings()
+    {
+        return $this->hasManyThrough(
+            Booking::class,
+            ArtisanProfile::class,
+            'user_id', // Foreign key on artisan_profiles table...
+            'artisan_profile_id', // Foreign key on bookings table...
+            'id', // Local key on users table...
+            'id' // Local key on artisan_profiles table...
+        );
+    }
+
+    /**
+     * Get the bookings made by the client user through their client profile.
+     */
+    public function clientBookings()
+    {
+        return $this->hasManyThrough(
+            Booking::class,
+            ClientProfile::class,
+            'user_id', // Foreign key on client_profiles table...
+            'client_profile_id', // Foreign key on bookings table...
+            'id', // Local key on users table...
+            'id' // Local key on client_profiles table...
+        );
+    }
 
     public function assignRole($role)
     {

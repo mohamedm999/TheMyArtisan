@@ -37,10 +37,13 @@ class ArtisanController extends Controller
         $artisan = ArtisanProfile::with([
             'user',
             'services.category',
+            'services.reviews',
             'certifications',
             'workExperiences',
             'availabilities',
-            'reviews.user'
+            'portfolioItems',
+            'reviews.user',
+            'bookings.service'
         ])->findOrFail($id);
 
         // Calculate the average rating and review count

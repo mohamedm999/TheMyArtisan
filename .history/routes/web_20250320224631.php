@@ -216,6 +216,9 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'role:client'])->g
     // Fix: Use fully qualified namespace for the Client ArtisanController
     Route::get('/artisans', [App\Http\Controllers\Client\ArtisanController::class, 'index'])->name('artisans.index');
     Route::get('/artisans/{id}', [App\Http\Controllers\Client\ArtisanController::class, 'show'])->name('artisans.show');
+
+    // Add missing services routes
+    Route::get('/services/{id}', [App\Http\Controllers\Client\ServiceController::class, 'show'])->name('services.show');
 });
 
 // API endpoints for the booking system

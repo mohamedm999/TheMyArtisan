@@ -40,12 +40,8 @@ class ArtisanController extends Controller
             'certifications',
             'workExperiences',
             'availabilities',
-            'reviews.user'
+            'reviews'
         ])->findOrFail($id);
-
-        // Calculate the average rating and review count
-        $artisan->average_rating = $artisan->getAverageRatingAttribute();
-        $artisan->reviews_count = $artisan->getTotalReviewsAttribute();
 
         return view('client.artisans.show', compact('artisan'));
     }

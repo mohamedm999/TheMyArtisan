@@ -84,6 +84,13 @@ class User extends Authenticatable
         return $this->hasOne(ClientProfile::class);
     }
 
+    /**
+     * Get the appropriate profile for this user based on their role.
+     * This method prevents the "undefined relationship [profile]" error.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+
 
     public function assignRole($role)
     {

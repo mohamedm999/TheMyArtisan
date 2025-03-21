@@ -84,6 +84,7 @@ class User extends Authenticatable
         return $this->hasOne(ClientProfile::class);
     }
 
+ 
 
     public function assignRole($role)
     {
@@ -108,4 +109,7 @@ class User extends Authenticatable
 
         return $this;
     }
+
+
+
 }

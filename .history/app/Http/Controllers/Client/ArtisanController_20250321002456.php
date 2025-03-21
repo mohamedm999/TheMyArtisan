@@ -40,6 +40,7 @@ class ArtisanController extends Controller
             'certifications',
             'workExperiences',
             'availabilities',
+            'portfolioItems',
             'reviews.user'
         ])->findOrFail($id);
 

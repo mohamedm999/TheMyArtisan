@@ -213,10 +213,11 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'role:client'])->g
     Route::post('/profile/update-personal-info', [ClientProfileController::class, 'updatePersonalInfo'])->name('profile.update-personal-info');
     Route::post('/profile/update-preferences', [ClientProfileController::class, 'updatePreferences'])->name('profile.update-preferences');
 
-    // Fix: Use fully qualified namespace for the Client ArtisanController
-    Route::get('/artisans', [App\Http\Controllers\Client\ArtisanController::class, 'index'])->name('artisans.index');
-    Route::get('/artisans/{id}', [App\Http\Controllers\Client\ArtisanController::class, 'show'])->name('artisans.show');
+    Route::get('/artisans', [ArtisanController::class, 'index'])->name('artisans.index');
+    Route::get('/artisans/{id}', [ArtisanController::class, 'show'])->name('artisans.show');
 });
+
+
 
 // API endpoints for the booking system
 Route::middleware(['auth', 'role:client'])->prefix('api')->group(function () {

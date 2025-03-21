@@ -201,6 +201,7 @@ Route::middleware(['auth', 'role:artisan'])->prefix('artisan')->name('artisan.')
 Route::prefix('client')->name('client.')->middleware(['auth', 'role:client'])->group(function () {
     Route::get('dashboard', [ClientDashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ClientDashboardController::class, 'profile'])->name('profile');
+    Route::get('/find-artisans', [App\Http\Controllers\Client\FindArtisansController::class, 'index'])->name('find-artisans');
     Route::get('/bookings', [ClientDashboardController::class, 'bookings'])->name('bookings');
     Route::get('/saved-artisans', [ClientDashboardController::class, 'savedArtisans'])->name('saved-artisans');
     Route::get('/messages', [ClientDashboardController::class, 'messages'])->name('messages');
@@ -210,13 +211,19 @@ Route::prefix('client')->name('client.')->middleware(['auth', 'role:client'])->g
     Route::get('/profile', [ClientProfileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [ClientProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/update-photo', [ClientProfileController::class, 'updatePhoto'])->name('profile.update-photo');
-    Route::post('/profile/update-personal-info', [ClientProfileController::class, 'updatePersonalInfo'])->name('profile.update-personal-info');
-    Route::post('/profile/update-preferences', [ClientProfileController::class, 'updatePreferences'])->name('profile.update-preferences');
+    Route::post('/profile/update-personal-info', [App\Http\Controllers\Client\ClientProfileController::class, 'updatePersonalInfo'])->name('profile.update-personal-info');
+    Route::post('/profile/update-preferences', [App\Http\Controllers\Client\ClientProfileController::class, 'updatePreferences'])->name('profile.update-preferences');
 
-    // Fix: Use fully qualified namespace for the Client ArtisanController
     Route::get('/artisans', [App\Http\Controllers\Client\ArtisanController::class, 'index'])->name('artisans.index');
     Route::get('/artisans/{id}', [App\Http\Controllers\Client\ArtisanController::class, 'show'])->name('artisans.show');
 });
+
+Route::get('/api/artisans', [App\Http\Controllers\Client\FindArtisansController::class, 'getArtisans'])
+    ->name('api.artisans');
+Route::get('/artisans/{id}', [App\Http\Controllers\Client\FindArtisansController::class, 'show'])
+    ->name('client.artisan-profile');
+Route::post('/artisans/{id}/save', [App\Http\Controllers\Client\FindArtisansController::class, 'saveArtisan'])
+    ->name('client.save-artisan')->middleware('auth');
 
 // API endpoints for the booking system
 Route::middleware(['auth', 'role:client'])->prefix('api')->group(function () {
