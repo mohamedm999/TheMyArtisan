@@ -17,82 +17,18 @@
             color: #047857;
             font-weight: 600;
         }
-
-        .skill-tag {
-            transition: all 0.2s ease;
-        }
-
-        .skill-tag:hover {
-            transform: translateY(-2px);
-        }
-
-        .specialty-badge {
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            z-index: 10;
-        }
-
-        .craft-icon {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-right: 0.5rem;
-        }
     </style>
 @endsection
 
 @section('content')
-    <!-- Hero Section with Specialty Badge -->
-    <div class="bg-gradient-to-r from-green-50 to-blue-50 relative">
-        @if ($artisan->speciality)
-            <div
-                class="specialty-badge px-4 py-1 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-full shadow-lg">
-                <div class="flex items-center">
-                    <span class="craft-icon bg-white">
-                        @if (strtolower($artisan->speciality) == 'pottery')
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                            </svg>
-                        @elseif(strtolower($artisan->speciality) == 'leather')
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-700" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        @elseif(strtolower($artisan->speciality) == 'woodwork')
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-800" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        @else
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path
-                                    d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                            </svg>
-                        @endif
-                    </span>
-                    <span class="font-bold">{{ $artisan->speciality }} Expert</span>
-                </div>
-            </div>
-        @endif
-
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-green-50 to-blue-50">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div class="lg:flex lg:items-center lg:justify-between">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center">
                         @if ($artisan->profile_photo)
-                            <img src="{{ asset('storage/' . $artisan->profile_photo) }}"
-                                alt="{{ $artisan->user->firstname }}"
+                            <img src="{{ asset('storage/' . $artisan->profile_photo) }}" alt="{{ $artisan->user->firstname }}"
                                 class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-white shadow-lg">
                         @else
                             <div
@@ -142,20 +78,6 @@
                             Member since {{ $artisan->created_at->format('M Y') }}
                         </div>
                     </div>
-
-                    <!-- Skills List - Enhanced Display -->
-                    @if (is_array($artisan->skills) && count($artisan->skills) > 0)
-                        <div class="mt-4">
-                            <div class="flex flex-wrap gap-2">
-                                @foreach ($artisan->skills as $skill)
-                                    <span
-                                        class="skill-tag inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 shadow-sm">
-                                        {{ $skill }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
                 </div>
                 <div class="mt-5 flex lg:mt-0 lg:ml-4 flex-col sm:flex-row gap-3">
                     <a href="#contact"
@@ -207,41 +129,17 @@
             </div>
         </div>
 
-        <!-- Services Tab - With Category Information -->
+        <!-- Services Tab -->
         <div id="services" class="tab-content">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-800">Services Offered</h2>
                 <p class="text-gray-500 text-sm mt-1">Browse through {{ $artisan->user->firstname }}'s professional
                     services</p>
             </div>
-
-            <!-- Category Filter for Services -->
-            @if ($artisan->services->pluck('category_id')->unique()->count() > 1)
-                <div class="mb-4">
-                    <div class="flex flex-wrap gap-2">
-                        <button
-                            class="service-category-filter active px-3 py-1 rounded-full text-sm bg-green-600 text-white"
-                            data-category="all">
-                            All
-                        </button>
-                        @foreach ($artisan->services->pluck('category.name', 'category_id')->unique() as $id => $name)
-                            @if ($name)
-                                <button
-                                    class="service-category-filter px-3 py-1 rounded-full text-sm bg-gray-200 hover:bg-gray-300 text-gray-700"
-                                    data-category="{{ $id }}">
-                                    {{ $name }}
-                                </button>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($artisan->services as $service)
-                    <div class="service-card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100
-                                transition transform hover:-translate-y-1 hover:shadow-md"
-                        data-category="{{ $service->category_id ?? 'none' }}">
+                    <div
+                        class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 transition transform hover:-translate-y-1 hover:shadow-md">
                         @if ($service->image)
                             <img src="{{ asset('storage/' . $service->image) }}" class="w-full h-48 object-cover"
                                 alt="{{ $service->name }}">
@@ -258,21 +156,10 @@
                         <div class="p-5">
                             <div class="flex justify-between items-start">
                                 <h3 class="text-lg font-semibold text-gray-800">{{ $service->name }}</h3>
-                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
-                                    {{ number_format($service->price, 2) }} DH
-                                </span>
+                                <span
+                                    class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ number_format($service->price, 2) }}
+                                    DH</span>
                             </div>
-
-                            <!-- Category Badge -->
-                            @if ($service->category)
-                                <div class="mt-1 mb-2">
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $service->category->name }}
-                                    </span>
-                                </div>
-                            @endif
-
                             <p class="text-gray-600 text-sm mt-2">{{ Str::limit($service->description, 100) }}</p>
                             <div class="mt-4 flex justify-between items-center">
                                 <span class="text-xs text-gray-500">{{ $service->duration }} min</span>
@@ -724,38 +611,7 @@
             }
         }
 
-        // Service category filtering
-        document.addEventListener('DOMContentLoaded', function() {
-            const categoryButtons = document.querySelectorAll('.service-category-filter');
-            const serviceCards = document.querySelectorAll('.service-card');
-
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    categoryButtons.forEach(btn => btn.classList.remove('active', 'bg-green-600',
-                        'text-white'));
-                    btn.classList.add('bg-gray-200', 'text-gray-700');
-
-                    // Add active class to clicked button
-                    this.classList.add('active', 'bg-green-600', 'text-white');
-                    this.classList.remove('bg-gray-200', 'text-gray-700');
-
-                    const selectedCategory = this.dataset.category;
-
-                    // Filter services
-                    serviceCards.forEach(card => {
-                        if (selectedCategory === 'all' || card.dataset.category ===
-                            selectedCategory) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        });
-
-        // Hash URL handling
+        // If there's a hash in the URL, activate that tab
         document.addEventListener('DOMContentLoaded', function() {
             const hash = window.location.hash.substring(1);
             if (hash && document.getElementById(hash)) {

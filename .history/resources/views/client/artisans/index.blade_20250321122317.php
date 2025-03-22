@@ -10,6 +10,31 @@
             background-color: #f3f4f6;
             color: #111827;
         }
+
+        .category-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-card.selected {
+            border-color: #059669;
+            background-color: rgba(5, 150, 105, 0.05);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
     </style>
 @endsection
 
@@ -21,6 +46,87 @@
             <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
                 Connect with skilled craftspeople who bring Moroccan tradition and expertise to your projects
             </p>
+        </div>
+    </div>
+
+    <!-- Featured Categories Section -->
+    <div class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Browse by Craft Category</h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="category-card p-4 rounded-lg shadow-sm text-center bg-white" data-category="pottery">
+                    <div class="category-icon bg-red-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Pottery</h3>
+                    <p class="mt-1 text-xs text-gray-500">Traditional Moroccan ceramics</p>
+                </div>
+
+                <div class="category-card p-4 rounded-lg shadow-sm text-center bg-white" data-category="zellige">
+                    <div class="category-icon bg-blue-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Zellige</h3>
+                    <p class="mt-1 text-xs text-gray-500">Mosaic tilework</p>
+                </div>
+
+                <div class="category-card p-4 rounded-lg shadow-sm text-center bg-white" data-category="leather">
+                    <div class="category-icon bg-yellow-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Leather Craft</h3>
+                    <p class="mt-1 text-xs text-gray-500">Traditional leatherwork</p>
+                </div>
+
+                <div class="category-card p-4 rounded-lg shadow-sm text-center bg-white" data-category="carpets">
+                    <div class="category-icon bg-purple-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Carpets</h3>
+                    <p class="mt-1 text-xs text-gray-500">Textiles & weaving</p>
+                </div>
+
+                <div class="category-card p-4 rounded-lg shadow-sm text-center bg-white" data-category="woodwork">
+                    <div class="category-icon bg-green-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Woodwork</h3>
+                    <p class="mt-1 text-xs text-gray-500">Carving & carpentry</p>
+                </div>
+
+                <div class="category-card p-4 rounded-lg shadow-sm text-center bg-white" data-category="jewelry">
+                    <div class="category-icon bg-pink-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Jewelry</h3>
+                    <p class="mt-1 text-xs text-gray-500">Metalwork & design</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -143,8 +249,8 @@
                             <span class="text-sm text-gray-500">View:</span>
                             <button type="button" id="grid-view-btn"
                                 class="view-toggle-btn active p-1 rounded-md hover:bg-gray-100" title="Grid View">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                                 </svg>
@@ -191,6 +297,16 @@
                                                 class="text-4xl font-bold text-white">{{ substr($artisan->user->firstname, 0, 1) }}</span>
                                         </div>
                                     @endif
+
+                                    <!-- Category Badge -->
+                                    @if ($artisan->speciality)
+                                        <div class="absolute top-2 left-2">
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-black bg-opacity-60 text-white">
+                                                {{ $artisan->speciality }}
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <div class="p-5">
@@ -209,7 +325,23 @@
                                         @endif
                                     </div>
 
-                                    <p class="text-sm text-gray-500 mb-3">{{ $artisan->profession ?? 'Artisan' }}</p>
+                                    <!-- Skills as tags -->
+                                    @if (is_array($artisan->skills) && count($artisan->skills) > 0)
+                                        <div class="flex flex-wrap gap-1 mb-3">
+                                            @foreach (array_slice($artisan->skills, 0, 3) as $skill)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                                    {{ $skill }}
+                                                </span>
+                                            @endforeach
+                                            @if (count($artisan->skills) > 3)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                    +{{ count($artisan->skills) - 3 }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
 
                                     <div class="flex items-center mb-3">
                                         <div class="flex items-center">
@@ -261,19 +393,23 @@
                                     @endif
 
                                     @if ($artisan->services->count() > 0)
-                                        <div class="flex flex-wrap gap-1 mt-3">
-                                            @foreach ($artisan->services->take(2) as $service)
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                    {{ Str::limit($service->name, 15) }}
-                                                </span>
-                                            @endforeach
-                                            @if ($artisan->services->count() > 2)
-                                                <span
-                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                    +{{ $artisan->services->count() - 2 }}
-                                                </span>
-                                            @endif
+                                        <div class="mt-3">
+                                            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                                                Services</h4>
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach ($artisan->services->take(2) as $service)
+                                                    <span
+                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                        {{ Str::limit($service->name, 15) }}
+                                                    </span>
+                                                @endforeach
+                                                @if ($artisan->services->count() > 2)
+                                                    <span
+                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                        +{{ $artisan->services->count() - 2 }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
@@ -492,6 +628,39 @@
             if (preferredView === 'list') {
                 listViewBtn.click();
             }
+        });
+
+        // Category selection functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryCards = document.querySelectorAll('.category-card');
+
+            categoryCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.dataset.category;
+
+                    // Toggle selection state
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        // Clear filter
+                        window.location.href = "{{ route('client.artisans.index') }}";
+                    } else {
+                        // Remove selection from all cards
+                        categoryCards.forEach(c => c.classList.remove('selected'));
+                        // Add selection to clicked card
+                        this.classList.add('selected');
+                        // Apply filter
+                        window.location.href = "{{ route('client.artisans.index') }}?category=" +
+                            category;
+                    }
+                });
+
+                // Check if this category is currently selected from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const selectedCategory = urlParams.get('category');
+                if (selectedCategory && card.dataset.category === selectedCategory) {
+                    card.classList.add('selected');
+                }
+            });
         });
     </script>
 @endsection
