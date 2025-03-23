@@ -180,11 +180,6 @@ Route::prefix('artisan')->middleware(['auth', 'role:artisan'])->group(function (
     Route::get('/reviews', [App\Http\Controllers\Artisan\ReviewsController::class, 'index'])->name('artisan.reviews');
     Route::post('/reviews/{id}/respond', [App\Http\Controllers\Artisan\ReviewsController::class, 'respond'])->name('artisan.reviews.respond');
     Route::post('/reviews/{id}/report', [App\Http\Controllers\Artisan\ReviewsController::class, 'report'])->name('artisan.reviews.report');
-
-    // Booking routes
-    Route::get('/bookings', [\App\Http\Controllers\Artisan\BookingController::class, 'index'])->name('artisan.bookings');
-    Route::get('/bookings/{id}', [\App\Http\Controllers\Artisan\BookingController::class, 'show'])->name('artisan.bookings.show');
-    Route::put('/bookings/{booking}', [\App\Http\Controllers\Artisan\BookingController::class, 'update'])->name('artisan.bookings.update');
 });
 
 // Artisan Profile Routes - consolidated for clarity and to avoid duplicate routes

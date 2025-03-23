@@ -121,9 +121,9 @@
                 <div class="flex flex-col h-full">
                     <div class="p-4 border-b border-gray-200">
                         <div class="flex items-center justify-center mb-4">
-                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                            {{-- <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
                                 <i class="fas fa-user text-green-600 text-xl"></i>
-                            </div>
+                            </div> --}}
                         </div>
                         <h5 class="text-center font-medium">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}
                         </h5>
@@ -156,10 +156,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('client.bookings.index') }}"
-                                    class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-green-50 transition-colors duration-200 {{ request()->routeIs('client.bookings.index') || request()->routeIs('client.bookings.show') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
+                                <a href="{{ route('client.bookings') }}"
+                                    class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-green-50 transition-colors duration-200 {{ request()->routeIs('client.bookings') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
                                     <i
-                                        class="fas fa-calendar w-6 {{ request()->routeIs('client.bookings.index') || request()->routeIs('client.bookings.show') ? 'text-green-600' : 'text-gray-500' }}"></i>
+                                        class="fas fa-calendar w-6 {{ request()->routeIs('client.bookings') ? 'text-green-600' : 'text-gray-500' }}"></i>
                                     <span>My Bookings</span>
                                     <span
                                         class="ml-auto bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">3</span>

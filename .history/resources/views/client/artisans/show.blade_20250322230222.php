@@ -709,23 +709,20 @@
                     @endif
 
                     @auth
-                        @if (Auth::user()->clientProfile)
+                        @if(Auth::user()->clientProfile)
                             <form action="{{ route('client.bookings.store') }}" method="POST" class="space-y-6">
                                 @csrf
                                 <input type="hidden" name="artisan_profile_id" value="{{ $artisan->id }}">
 
                                 <div>
-                                    <label for="service_id" class="block text-sm font-medium text-gray-700">Select
-                                        Service</label>
+                                    <label for="service_id" class="block text-sm font-medium text-gray-700">Select Service</label>
                                     <div class="mt-1">
                                         <select id="service_id" name="service_id" required
                                             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
                                             <option value="">Select a service</option>
-                                            @foreach ($artisan->services as $service)
-                                                <option value="{{ $service->id }}" data-price="{{ $service->price }}"
-                                                    data-duration="{{ $service->duration }}">
-                                                    {{ $service->name }} - {{ number_format($service->price, 2) }} DH
-                                                    ({{ $service->duration }} min)
+                                            @foreach($artisan->services as $service)
+                                                <option value="{{ $service->id }}" data-price="{{ $service->price }}" data-duration="{{ $service->duration }}">
+                                                    {{ $service->name }} - {{ number_format($service->price, 2) }} DH ({{ $service->duration }} min)
                                                 </option>
                                             @endforeach
                                         </select>
@@ -736,8 +733,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="booking_date" class="block text-sm font-medium text-gray-700">Booking Date &
-                                        Time</label>
+                                    <label for="booking_date" class="block text-sm font-medium text-gray-700">Booking Date & Time</label>
                                     <div class="mt-1">
                                         <input type="datetime-local" name="booking_date" id="booking_date" required
                                             min="{{ date('Y-m-d\TH:i') }}"
@@ -750,8 +746,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="notes" class="block text-sm font-medium text-gray-700">Additional
-                                        Notes</label>
+                                    <label for="notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
                                     <div class="mt-1">
                                         <textarea id="notes" name="notes" rows="3"
                                             class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -787,8 +782,7 @@
                                             class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded">
                                     </div>
                                     <div class="ml-3 text-sm">
-                                        <label for="terms" class="font-medium text-gray-700">I agree to the terms and
-                                            conditions</label>
+                                        <label for="terms" class="font-medium text-gray-700">I agree to the terms and conditions</label>
                                         @error('terms')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
@@ -798,11 +792,8 @@
                                 <div>
                                     <button type="submit"
                                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                        <svg class="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                clip-rule="evenodd" />
+                                        <svg class="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
                                         </svg>
                                         Book Now
                                     </button>
@@ -810,14 +801,11 @@
                             </form>
                         @else
                             <div class="text-center py-6">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                                 </svg>
                                 <h3 class="mt-2 text-sm font-medium text-gray-900">Complete your profile first</h3>
-                                <p class="mt-1 text-sm text-gray-500">You need to complete your client profile before booking
-                                    services.</p>
+                                <p class="mt-1 text-sm text-gray-500">You need to complete your client profile before booking services.</p>
                                 <div class="mt-6">
                                     <a href="{{ route('client.profile') }}"
                                         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -828,10 +816,8 @@
                         @endif
                     @else
                         <div class="text-center py-6">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                             </svg>
                             <h3 class="mt-2 text-sm font-medium text-gray-900">Login to book services</h3>
                             <p class="mt-1 text-sm text-gray-500">You need to login before you can book services.</p>

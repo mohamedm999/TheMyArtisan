@@ -187,8 +187,6 @@
                     class="tab-btn whitespace-nowrap py-2 px-1 text-gray-500 hover:text-gray-900">Availability</button>
                 <button onclick="switchTab(event, 'reviews')"
                     class="tab-btn whitespace-nowrap py-2 px-1 text-gray-500 hover:text-gray-900">Reviews</button>
-                <button onclick="switchTab(event, 'book')"
-                    class="tab-btn whitespace-nowrap py-2 px-1 text-gray-500 hover:text-gray-900">Book Now</button>
                 <button onclick="switchTab(event, 'contact')"
                     class="tab-btn whitespace-nowrap py-2 px-1 text-gray-500 hover:text-gray-900">Contact</button>
             </div>
@@ -383,7 +381,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         <p class="mt-4 text-gray-500">No work experience listed.</p>
                     </div>
@@ -681,171 +679,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Book Now Tab -->
-        <div id="book" class="tab-content">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-800">Book {{ $artisan->user->firstname }}'s Services</h2>
-                <p class="text-gray-500 text-sm mt-1">Schedule a service appointment</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-                <div class="p-5">
-                    @if (session('success'))
-                        <div class="mb-4 bg-green-50 border-l-4 border-green-500 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm text-green-700">{{ session('success') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    @auth
-                        @if (Auth::user()->clientProfile)
-                            <form action="{{ route('client.bookings.store') }}" method="POST" class="space-y-6">
-                                @csrf
-                                <input type="hidden" name="artisan_profile_id" value="{{ $artisan->id }}">
-
-                                <div>
-                                    <label for="service_id" class="block text-sm font-medium text-gray-700">Select
-                                        Service</label>
-                                    <div class="mt-1">
-                                        <select id="service_id" name="service_id" required
-                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                            <option value="">Select a service</option>
-                                            @foreach ($artisan->services as $service)
-                                                <option value="{{ $service->id }}" data-price="{{ $service->price }}"
-                                                    data-duration="{{ $service->duration }}">
-                                                    {{ $service->name }} - {{ number_format($service->price, 2) }} DH
-                                                    ({{ $service->duration }} min)
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('service_id')
-                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label for="booking_date" class="block text-sm font-medium text-gray-700">Booking Date &
-                                        Time</label>
-                                    <div class="mt-1">
-                                        <input type="datetime-local" name="booking_date" id="booking_date" required
-                                            min="{{ date('Y-m-d\TH:i') }}"
-                                            class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                        @error('booking_date')
-                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <p class="mt-1 text-sm text-gray-500">Please select a date and time for your booking</p>
-                                </div>
-
-                                <div>
-                                    <label for="notes" class="block text-sm font-medium text-gray-700">Additional
-                                        Notes</label>
-                                    <div class="mt-1">
-                                        <textarea id="notes" name="notes" rows="3"
-                                            class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                            placeholder="Add any special requests or information the artisan should know"></textarea>
-                                        @error('notes')
-                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Service Summary -->
-                                <div id="service-summary" class="hidden bg-gray-50 p-4 rounded-md">
-                                    <h4 class="font-medium text-gray-900">Booking Summary</h4>
-                                    <div class="mt-2 space-y-2">
-                                        <div class="flex justify-between">
-                                            <span class="text-sm text-gray-600">Service:</span>
-                                            <span class="text-sm font-medium" id="summary-service">Not selected</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-sm text-gray-600">Price:</span>
-                                            <span class="text-sm font-medium" id="summary-price">-</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-sm text-gray-600">Duration:</span>
-                                            <span class="text-sm font-medium" id="summary-duration">-</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start">
-                                    <div class="flex items-center h-5">
-                                        <input id="terms" name="terms" type="checkbox" required
-                                            class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300 rounded">
-                                    </div>
-                                    <div class="ml-3 text-sm">
-                                        <label for="terms" class="font-medium text-gray-700">I agree to the terms and
-                                            conditions</label>
-                                        @error('terms')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button type="submit"
-                                        class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                        <svg class="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Book Now
-                                    </button>
-                                </div>
-                            </form>
-                        @else
-                            <div class="text-center py-6">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                                </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900">Complete your profile first</h3>
-                                <p class="mt-1 text-sm text-gray-500">You need to complete your client profile before booking
-                                    services.</p>
-                                <div class="mt-6">
-                                    <a href="{{ route('client.profile') }}"
-                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                        Complete Profile
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
-                    @else
-                        <div class="text-center py-6">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                            </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">Login to book services</h3>
-                            <p class="mt-1 text-sm text-gray-500">You need to login before you can book services.</p>
-                            <div class="mt-6">
-                                <a href="{{ route('login') }}?redirect={{ url()->current() }}"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    Login
-                                </a>
-                            </div>
-                        </div>
-                    @endauth
-                </div>
-            </div>
-        </div>
     </div>
 
 @endsection
@@ -920,31 +753,6 @@
                     });
                 });
             });
-
-            // Booking form service selection
-            const serviceSelect = document.getElementById('service_id');
-            const serviceSummary = document.getElementById('service-summary');
-            const summaryService = document.getElementById('summary-service');
-            const summaryPrice = document.getElementById('summary-price');
-            const summaryDuration = document.getElementById('summary-duration');
-
-            if (serviceSelect) {
-                serviceSelect.addEventListener('change', function() {
-                    if (this.value) {
-                        const option = this.options[this.selectedIndex];
-                        const price = option.dataset.price;
-                        const duration = option.dataset.duration;
-
-                        summaryService.textContent = option.text.split(' - ')[0];
-                        summaryPrice.textContent = price ? `${price} DH` : '-';
-                        summaryDuration.textContent = duration ? `${duration} minutes` : '-';
-
-                        serviceSummary.classList.remove('hidden');
-                    } else {
-                        serviceSummary.classList.add('hidden');
-                    }
-                });
-            }
         });
 
         // Hash URL handling

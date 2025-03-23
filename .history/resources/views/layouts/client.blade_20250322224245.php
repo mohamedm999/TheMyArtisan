@@ -77,8 +77,8 @@
                                 class="flex items-center space-x-3 text-white focus:outline-none hover:bg-green-600 p-2 rounded-lg transition-colors duration-200">
                                 <div
                                     class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center border-2 border-white">
-                                    <span
-                                        class="text-xs font-bold">{{ substr(Auth::user()->firstname, 0, 1) }}{{ substr(Auth::user()->lastname, 0, 1) }}</span>
+                                    {{-- <span
+                                        class="text-xs font-bold">{{ substr(Auth::user()->firstname, 0, 1) }}{{ substr(Auth::user()->lastname, 0, 1) }}</span> --}}
                                 </div>
                                 <div class="hidden md:flex md:flex-col md:items-start">
                                     <span class="font-semibold">{{ Auth::user()->firstname }}
@@ -156,10 +156,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('client.bookings.index') }}"
-                                    class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-green-50 transition-colors duration-200 {{ request()->routeIs('client.bookings.index') || request()->routeIs('client.bookings.show') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
+                                <a href="{{ route('client.bookings') }}"
+                                    class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-green-50 transition-colors duration-200 {{ request()->routeIs('client.bookings') ? 'bg-green-50 text-green-700 font-medium' : '' }}">
                                     <i
-                                        class="fas fa-calendar w-6 {{ request()->routeIs('client.bookings.index') || request()->routeIs('client.bookings.show') ? 'text-green-600' : 'text-gray-500' }}"></i>
+                                        class="fas fa-calendar w-6 {{ request()->routeIs('client.bookings') ? 'text-green-600' : 'text-gray-500' }}"></i>
                                     <span>My Bookings</span>
                                     <span
                                         class="ml-auto bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">3</span>

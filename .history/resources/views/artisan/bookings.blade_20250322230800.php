@@ -87,23 +87,18 @@
                                                 @elseif($booking->status == 'cancelled') bg-red-100 text-red-800 @endif">
                                                 {{ ucfirst(str_replace('_', ' ', $booking->status)) }}
                                             </span>
-                                            <h3 class="text-lg font-medium text-gray-900 mt-2">
-                                                {{ $booking->service->name }}</h3>
-                                            <p class="text-sm text-gray-500 mt-1">Service ID: #{{ $booking->service->id }}
-                                            </p>
+                                            <h3 class="text-lg font-medium text-gray-900 mt-2">{{ $booking->service->name }}</h3>
+                                            <p class="text-sm text-gray-500 mt-1">Service ID: #{{ $booking->service->id }}</p>
                                         </div>
                                         <div class="mt-4 md:mt-0">
                                             <p class="text-sm font-medium text-gray-500">Price</p>
-                                            <p class="text-lg font-semibold text-amber-600">
-                                                {{ number_format($booking->service->price, 2) }} DH</p>
+                                            <p class="text-lg font-semibold text-amber-600">{{ number_format($booking->service->price, 2) }} DH</p>
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="md:w-2/4 p-4 border-t md:border-t-0 md:border-l md:border-r border-gray-200">
+                                    <div class="md:w-2/4 p-4 border-t md:border-t-0 md:border-l md:border-r border-gray-200">
                                         <div class="flex items-center mb-3">
-                                            <div
-                                                class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
                                                 @if ($booking->clientProfile->profile_photo)
                                                     <img src="{{ asset('storage/' . $booking->clientProfile->profile_photo) }}"
                                                         alt="{{ $booking->clientProfile->user->firstname }}"
@@ -120,8 +115,7 @@
                                                     {{ $booking->clientProfile->user->lastname }}
                                                 </h4>
                                                 <p class="text-sm text-gray-500">
-                                                    {{ $booking->clientProfile->city }},
-                                                    {{ $booking->clientProfile->state }}
+                                                    {{ $booking->clientProfile->city }}, {{ $booking->clientProfile->state }}
                                                 </p>
                                             </div>
                                         </div>
@@ -141,24 +135,20 @@
                                             </div>
                                             <div class="flex items-start text-sm">
                                                 <i class="fas fa-comment-alt text-amber-500 mr-2 w-4 mt-1"></i>
-                                                <p class="text-gray-600">{{ $booking->notes ?? 'No special instructions' }}
-                                                </p>
+                                                <p class="text-gray-600">{{ $booking->notes ?? 'No special instructions' }}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div
-                                        class="md:w-1/4 p-4 bg-gray-50 border-t md:border-t-0 md:border-l border-gray-200 flex flex-col justify-between">
+                                    <div class="md:w-1/4 p-4 bg-gray-50 border-t md:border-t-0 md:border-l border-gray-200 flex flex-col justify-between">
                                         <div class="text-sm text-gray-500">
-                                            <p>Requested: <span
-                                                    class="text-gray-900">{{ $booking->created_at->format('M d, Y') }}</span>
+                                            <p>Requested: <span class="text-gray-900">{{ $booking->created_at->format('M d, Y') }}</span>
                                             </p>
                                         </div>
 
                                         <div class="mt-4 space-y-2">
                                             @if ($booking->status == 'pending')
-                                                <form action="{{ route('artisan.bookings.update', $booking) }}"
-                                                    method="POST">
+                                                <form action="{{ route('artisan.bookings.update', $booking) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="confirmed">
@@ -167,8 +157,7 @@
                                                         Accept
                                                     </button>
                                                 </form>
-                                                <form action="{{ route('artisan.bookings.update', $booking) }}"
-                                                    method="POST">
+                                                <form action="{{ route('artisan.bookings.update', $booking) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="cancelled">
@@ -178,8 +167,7 @@
                                                     </button>
                                                 </form>
                                             @elseif($booking->status == 'confirmed')
-                                                <form action="{{ route('artisan.bookings.update', $booking) }}"
-                                                    method="POST">
+                                                <form action="{{ route('artisan.bookings.update', $booking) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="in_progress">
@@ -189,8 +177,7 @@
                                                     </button>
                                                 </form>
                                             @elseif($booking->status == 'in_progress')
-                                                <form action="{{ route('artisan.bookings.update', $booking) }}"
-                                                    method="POST">
+                                                <form action="{{ route('artisan.bookings.update', $booking) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="completed">
@@ -206,7 +193,7 @@
                                                 <i class="fas fa-eye mr-2"></i> View Details
                                             </a>
 
-                                            @if ($booking->clientProfile->user->id)
+                                            @if($booking->clientProfile->user->id)
                                                 <a href="{{ route('messages.conversation', $booking->clientProfile->user->id) }}"
                                                     class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-amber-600 bg-white hover:bg-gray-50 focus:outline-none">
                                                     <i class="fas fa-comment mr-2"></i> Message
