@@ -86,7 +86,6 @@ class ReviewsController extends Controller
             $review = Review::where('id', $id)
                 ->where('artisan_profile_id', $artisanProfile->id)
                 ->firstOrFail();
-                
             $request->validate([
                 'response' => 'required|string|max:1000',
             ]);
