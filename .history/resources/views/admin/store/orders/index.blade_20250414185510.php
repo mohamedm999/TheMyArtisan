@@ -222,23 +222,28 @@
                                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                                                     </svg>
                                                 </button>
-                                                <div x-show="open" @click.away="open = false"
-                                                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                    <div class="py-1">
-                                                        @foreach (['pending', 'processing', 'shipped', 'completed', 'cancelled'] as $status)
-                                                            @if ($status != $order->status)
-                                                                <form
-                                                                    action="{{ route('admin.store.orders.update-status', $order->id) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    <input type="hidden" name="status" value="{{ $status }}">
-                                                                    <button type="submit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                                                                        Mark as {{ ucfirst($status) }}
-                                                                    </button>
-                                                                </form>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
+                                            <div class="dropdown d-inline">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                    id="statusDropdown{{ $order->id }}" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-exchange-alt"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right"
+                                                    aria-labelledby="statusDropdown{{ $order->id }}">
+                                                    @foreach (['pending', 'processing', 'shipped', 'completed', 'cancelled'] as $status)
+                                                        @if ($status != $order->status)
+                                                            <form
+                                                                action="{{ route('admin.store.orders.update-status', $order->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status"
+                                                                    value="{{ $status }}">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    Mark as {{ ucfirst($status) }}
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -246,14 +251,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">No orders found</td>
+                                    <td colspan="8" class="text-center">No orders found</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
 
-                <div class="mt-4 flex justify-center">
+                <div class="mt-4 d-flex justify-content-center">
                     {{ $orders->withQueryString()->links() }}
                 </div>
             </div>

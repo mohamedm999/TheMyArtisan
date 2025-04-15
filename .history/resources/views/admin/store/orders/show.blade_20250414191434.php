@@ -141,115 +141,127 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <tr>
-                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Order ID</th>
-                                            <td class="px-4 py-3">#{{ $order->id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Ordered</th>
-                                            <td class="px-4 py-3">{{ $order->created_at->format('M d, Y h:i A') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
-                                            <td class="px-4 py-3">{{ $order->updated_at->format('M d, Y h:i A') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                            <td class="px-4 py-3">
-                                                <div class="status-badges">
-                                                    @if ($order->status == 'pending')
-                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                                    @elseif($order->status == 'processing')
-                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Processing</span>
-                                                    @elseif($order->status == 'shipped')
-                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">Shipped</span>
-                                                    @elseif($order->status == 'completed')
-                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
-                                                    @elseif($order->status == 'cancelled')
-                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>
-                                                    @else
-                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ $order->status }}</span>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                                            <td class="px-4 py-3">{{ $order->quantity }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points Spent</th>
-                                            <td class="px-4 py-3"><strong class="text-blue-600">{{ number_format($order->points_spent) }}</strong> points</td>
-                                        </tr>
-                                        @if ($order->shipping_address)
-                                            <tr>
-                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipping Address</th>
-                                                <td class="px-4 py-3">{{ $order->shipping_address }}</td>
+                                                <th style="width: 200px;">Order ID</th>
+                                                <td>#{{ $order->id }}</td>
                                             </tr>
-                                        @endif
-                                        @if ($order->notes)
                                             <tr>
-                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
-                                                <td class="px-4 py-3">{{ $order->notes }}</td>
+                                                <th>Date Ordered</th>
+                                                <td>{{ $order->created_at->format('M d, Y h:i A') }}</td>
                                             </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            @if ($order->notes_admin)
-                                <div class="mt-6">
-                                    <h3 class="text-lg font-semibold mb-2">Admin Notes</h3>
-                                    <div class="p-4 bg-gray-50 rounded-md border border-gray-200">
-                                        {{ $order->notes_admin }}
-                                    </div>
+                                            <tr>
+                                                <th>Last Updated</th>
+                                                <td>{{ $order->updated_at->format('M d, Y h:i A') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Status</th>
+                                                <td>
+                                                    <div class="status-badges">
+                                                        @if ($order->status == 'pending')
+                                                            <span class="badge badge-warning">Pending</span>
+                                                        @elseif($order->status == 'processing')
+                                                            <span class="badge badge-info">Processing</span>
+                                                        @elseif($order->status == 'shipped')
+                                                            <span class="badge badge-primary">Shipped</span>
+                                                        @elseif($order->status == 'completed')
+                                                            <span class="badge badge-success">Completed</span>
+                                                        @elseif($order->status == 'cancelled')
+                                                            <span class="badge badge-danger">Cancelled</span>
+                                                        @else
+                                                            <span class="badge badge-secondary">{{ $order->status }}</span>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Quantity</th>
+                                                <td>{{ $order->quantity }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Points Spent</th>
+                                                <td><strong
+                                                        class="text-primary">{{ number_format($order->points_spent) }}</strong>
+                                                    points</td>
+                                            </tr>
+                                            @if ($order->shipping_address)
+                                                <tr>
+                                                    <th>Shipping Address</th>
+                                                    <td>{{ $order->shipping_address }}</td>
+                                                </tr>
+                                            @endif
+                                            @if ($order->notes)
+                                                <tr>
+                                                    <th>Notes</th>
+                                                    <td>{{ $order->notes }}</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
                                 </div>
-                            @endif
+
+                                @if ($order->notes_admin)
+                                    <div class="mt-4">
+                                        <h5>Admin Notes</h5>
+                                        <div class="border p-3 bg-light">
+                                            {{ $order->notes_admin }}
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="px-6 py-4 bg-gray-50 border-b">
-                        <h2 class="text-lg font-semibold text-blue-600">Order History</h2>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Order History</h6>
                     </div>
-                    <div class="p-6">
+                    <div class="card-body">
                         <div class="timeline">
                             @if ($orderHistory->count() > 0)
-                                <ul class="space-y-4">
+                                <ul class="list-group">
                                     @foreach ($orderHistory as $history)
-                                        <li class="flex">
-                                            <div class="mr-4 mt-1">
+                                        <li class="list-group-item border-0 d-flex">
+                                            <div class="timeline-bullet mr-3">
                                                 @if ($history->status == 'pending')
-                                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                                    <div class="bg-warning rounded-circle"
+                                                        style="width: 12px; height: 12px;"></div>
                                                 @elseif($history->status == 'processing')
-                                                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                                                    <div class="bg-info rounded-circle" style="width: 12px; height: 12px;">
+                                                    </div>
                                                 @elseif($history->status == 'shipped')
-                                                    <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
+                                                    <div class="bg-primary rounded-circle"
+                                                        style="width: 12px; height: 12px;"></div>
                                                 @elseif($history->status == 'completed')
-                                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                                    <div class="bg-success rounded-circle"
+                                                        style="width: 12px; height: 12px;"></div>
                                                 @elseif($history->status == 'cancelled')
-                                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                                    <div class="bg-danger rounded-circle"
+                                                        style="width: 12px; height: 12px;"></div>
                                                 @else
-                                                    <div class="w-3 h-3 rounded-full bg-gray-500"></div>
+                                                    <div class="bg-secondary rounded-circle"
+                                                        style="width: 12px; height: 12px;"></div>
                                                 @endif
                                             </div>
-                                            <div class="flex-1">
-                                                <div class="flex justify-between items-center">
-                                                    <span class="font-medium">Status changed to <span class="capitalize">{{ $history->status }}</span></span>
-                                                    <span class="text-sm text-gray-500">{{ $history->created_at->format('M d, Y h:i A') }}</span>
+                                            <div class="timeline-content">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="font-weight-bold">Status changed to <span
+                                                            class="text-capitalize">{{ $history->status }}</span></span>
+                                                    <small
+                                                        class="text-muted">{{ $history->created_at->format('M d, Y h:i A') }}</small>
                                                 </div>
                                                 @if ($history->comment)
-                                                    <p class="mt-1 text-gray-600 text-sm">{{ $history->comment }}</p>
+                                                    <p class="mt-1 mb-0 text-muted">{{ $history->comment }}</p>
                                                 @endif
                                                 @if ($history->user)
-                                                    <small class="text-blue-600 text-xs">By: {{ $history->user->firstname }} {{ $history->user->lastname }}</small>
+                                                    <small class="text-info">By: {{ $history->user->firstname }}
+                                                        {{ $history->user->lastname }}</small>
                                                 @endif
                                             </div>
                                         </li>
                                     @endforeach
                                 </ul>
                             @else
-                                <p class="text-gray-500">No history recorded for this order.</p>
+                                <p class="text-muted">No history recorded for this order.</p>
                             @endif
                         </div>
                     </div>
@@ -257,73 +269,70 @@
             </div>
 
             <!-- Actions Sidebar -->
-            <div class="w-full lg:w-1/3 px-4 mb-8">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-                    <div class="px-6 py-4 bg-gray-50 border-b">
-                        <h2 class="text-lg font-semibold text-blue-600">Order Actions</h2>
+            <div class="col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Order Actions</h6>
                     </div>
-                    <div class="p-6">
+                    <div class="card-body">
                         <!-- Status Update Form -->
                         <form action="{{ route('admin.store.orders.update-status', $order->id) }}" method="POST">
                             @csrf
-                            <div class="mb-4">
-                                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Change Order Status</label>
-                                <select name="status" id="status" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
-                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <div class="form-group">
+                                <label for="status">Change Order Status</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending
+                                    </option>
+                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>
+                                        Processing</option>
+                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped
+                                    </option>
+                                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>
+                                        Completed</option>
+                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>
+                                        Cancelled</option>
                                 </select>
                             </div>
 
-                            <div class="mb-4">
-                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Comment (Optional)</label>
-                                <textarea name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" rows="2"></textarea>
-                                <p class="mt-1 text-sm text-gray-500">Add a note about this status change</p>
+                            <div class="form-group">
+                                <label for="comment">Comment (Optional)</label>
+                                <textarea name="comment" id="comment" class="form-control" rows="2"></textarea>
+                                <small class="form-text text-muted">Add a note about this status change</small>
                             </div>
 
-                            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                </svg>
-                                Update Status
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-sync-alt mr-1"></i> Update Status
                             </button>
                         </form>
 
-                        <div class="my-6 border-t border-gray-200"></div>
+                        <hr>
 
                         <!-- Admin Notes Form -->
                         <form action="{{ route('admin.store.orders.update-admin-notes', $order->id) }}" method="POST">
                             @csrf
-                            <div class="mb-4">
-                                <label for="notes_admin" class="block text-sm font-medium text-gray-700 mb-1">Admin Notes (Internal only)</label>
-                                <textarea name="notes_admin" id="notes_admin" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" rows="4">{{ $order->notes_admin }}</textarea>
-                                <p class="mt-1 text-sm text-gray-500">These notes are for internal use only and not visible to clients</p>
+                            <div class="form-group">
+                                <label for="notes_admin">Admin Notes (Internal only)</label>
+                                <textarea name="notes_admin" id="notes_admin" class="form-control" rows="4">{{ $order->notes_admin }}</textarea>
+                                <small class="form-text text-muted">These notes are for internal use only and not visible
+                                    to clients</small>
                             </div>
 
-                            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                                </svg>
-                                Save Admin Notes
+                            <button type="submit" class="btn btn-secondary btn-block">
+                                <i class="fas fa-save mr-1"></i> Save Admin Notes
                             </button>
                         </form>
 
-                        <div class="my-6 border-t border-gray-200"></div>
+                        <hr>
 
                         <div class="quick-actions">
-                            <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
-                            <div class="space-y-3">
+                            <h6 class="font-weight-bold">Quick Actions</h6>
+                            <div class="mt-3">
                                 @if ($order->status != 'cancelled')
                                     <form action="{{ route('admin.store.orders.cancel', $order->id) }}" method="POST"
                                         onsubmit="return confirm('Are you sure you want to cancel this order? This will return points to the client.');">
                                         @csrf
-                                        <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                            Cancel Order & Return Points
+                                        <button type="submit" class="btn btn-danger btn-block mb-2">
+                                            <i class="fas fa-times mr-1"></i> Cancel Order & Return Points
                                         </button>
                                     </form>
                                 @endif
@@ -331,15 +340,6 @@
                                 @if ($order->status != 'completed')
                                     <form action="{{ route('admin.store.orders.complete', $order->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                            </svg>
-                                            Mark as Completed
-                                        </button>
-                                    </form>
-                                @endif
-
                                         <button type="submit" class="btn btn-success btn-block mb-2">
                                             <i class="fas fa-check mr-1"></i> Mark as Completed
                                         </button>

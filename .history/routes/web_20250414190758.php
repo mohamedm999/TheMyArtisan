@@ -126,7 +126,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::resource('products', \App\Http\Controllers\Admin\StoreProductController::class);
         Route::post('/products/{id}/toggle-availability', [\App\Http\Controllers\Admin\StoreProductController::class, 'toggleAvailability'])->name('products.toggleAvailability');
         Route::post('/products/{id}/toggle-featured', [\App\Http\Controllers\Admin\StoreProductController::class, 'toggleFeatured'])->name('products.toggleFeatured');
-
+        
         // Store Orders Management
         Route::get('/orders', [\App\Http\Controllers\Admin\StoreOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{id}', [\App\Http\Controllers\Admin\StoreOrderController::class, 'show'])->name('orders.show');

@@ -310,8 +310,7 @@ class StoreOrderController extends Controller
         PointTransaction::create([
             'user_id' => $order->user_id,
             'points' => 0,
-            'transactionable_type' => 'App\\Models\\ProductOrder',
-            'transactionable_id' => $order->id,
+            'order_id' => $order->id,
             'transaction_type' => 'communication',
             'status' => $order->status,
             'description' => 'Email sent regarding order #' . $order->id . ': ' . $request->subject,

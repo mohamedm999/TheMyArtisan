@@ -304,26 +304,35 @@
 
                             <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                 <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-                                </svg>
-                                Save Admin Notes
+
+                        <hr>
+
+                        <!-- Admin Notes Form -->
+                        <form action="{{ route('admin.store.orders.update-admin-notes', $order->id) }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="notes_admin">Admin Notes (Internal only)</label>
+                                <textarea name="notes_admin" id="notes_admin" class="form-control" rows="4">{{ $order->notes_admin }}</textarea>
+                                <small class="form-text text-muted">These notes are for internal use only and not visible
+                                    to clients</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary btn-block">
+                                <i class="fas fa-save mr-1"></i> Save Admin Notes
                             </button>
                         </form>
 
-                        <div class="my-6 border-t border-gray-200"></div>
+                        <hr>
 
                         <div class="quick-actions">
-                            <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
-                            <div class="space-y-3">
+                            <h6 class="font-weight-bold">Quick Actions</h6>
+                            <div class="mt-3">
                                 @if ($order->status != 'cancelled')
                                     <form action="{{ route('admin.store.orders.cancel', $order->id) }}" method="POST"
                                         onsubmit="return confirm('Are you sure you want to cancel this order? This will return points to the client.');">
                                         @csrf
-                                        <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                            Cancel Order & Return Points
+                                        <button type="submit" class="btn btn-danger btn-block mb-2">
+                                            <i class="fas fa-times mr-1"></i> Cancel Order & Return Points
                                         </button>
                                     </form>
                                 @endif
@@ -331,15 +340,6 @@
                                 @if ($order->status != 'completed')
                                     <form action="{{ route('admin.store.orders.complete', $order->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                            </svg>
-                                            Mark as Completed
-                                        </button>
-                                    </form>
-                                @endif
-
                                         <button type="submit" class="btn btn-success btn-block mb-2">
                                             <i class="fas fa-check mr-1"></i> Mark as Completed
                                         </button>

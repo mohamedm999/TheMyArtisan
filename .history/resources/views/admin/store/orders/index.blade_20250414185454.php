@@ -187,58 +187,63 @@
                                                 {{ $order->product->name }}
                                             </a>
                                         @else
-                                            <span class="text-gray-400">Product Deleted</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">{{ $order->quantity }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">{{ number_format($order->points_spent) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if ($order->status == 'pending')
-                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                        @elseif($order->status == 'processing')
-                                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Processing</span>
-                                        @elseif($order->status == 'shipped')
-                                            <span class="px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-800">Shipped</span>
-                                        @elseif($order->status == 'completed')
-                                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span>
-                                        @elseif($order->status == 'cancelled')
-                                            <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Cancelled</span>
+                                    <td>
+                                        @if ($order->product)
+                                            <a href="{{ route('admin.store.products.show', $order->store_product_id) }}">
+                                                {{ $order->product->name }}
+                                            </a>
                                         @else
-                                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">{{ $order->status }}</span>
+                                            <span class="text-muted">Product Deleted</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">{{ $order->created_at->format('M d, Y h:i A') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        <div class="flex space-x-2">
+                                    <td>{{ $order->quantity }}</td>
+                                    <td>{{ number_format($order->points_spent) }}</td>
+                                    <td>
+                                        @if ($order->status == 'pending')
+                                            <span class="badge badge-warning">Pending</span>
+                                        @elseif($order->status == 'processing')
+                                            <span class="badge badge-info">Processing</span>
+                                        @elseif($order->status == 'shipped')
+                                            <span class="badge badge-primary">Shipped</span>
+                                        @elseif($order->status == 'completed')
+                                            <span class="badge badge-success">Completed</span>
+                                        @elseif($order->status == 'cancelled')
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        @else
+                                            <span class="badge badge-secondary">{{ $order->status }}</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $order->created_at->format('M d, Y h:i A') }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
                                             <a href="{{ route('admin.store.orders.show', $order->id) }}"
-                                                class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600" title="View Details">
+                                                class="btn btn-info" title="View Details">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <div class="relative inline-block text-left" x-data="{ open: false }">
-                                                <button @click="open = !open" type="button"
-                                                    class="px-2 py-1 bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center">
-                                                    <i class="fas fa-exchange-alt mr-1"></i>
-                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                                    </svg>
+                                            <div class="dropdown d-inline">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                    id="statusDropdown{{ $order->id }}" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-exchange-alt"></i>
                                                 </button>
-                                                <div x-show="open" @click.away="open = false"
-                                                    class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                                    <div class="py-1">
-                                                        @foreach (['pending', 'processing', 'shipped', 'completed', 'cancelled'] as $status)
-                                                            @if ($status != $order->status)
-                                                                <form
-                                                                    action="{{ route('admin.store.orders.update-status', $order->id) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    <input type="hidden" name="status" value="{{ $status }}">
-                                                                    <button type="submit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                                                                        Mark as {{ ucfirst($status) }}
-                                                                    </button>
-                                                                </form>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
+                                                <div class="dropdown-menu dropdown-menu-right"
+                                                    aria-labelledby="statusDropdown{{ $order->id }}">
+                                                    @foreach (['pending', 'processing', 'shipped', 'completed', 'cancelled'] as $status)
+                                                        @if ($status != $order->status)
+                                                            <form
+                                                                action="{{ route('admin.store.orders.update-status', $order->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status"
+                                                                    value="{{ $status }}">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    Mark as {{ ucfirst($status) }}
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -246,14 +251,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">No orders found</td>
+                                    <td colspan="8" class="text-center">No orders found</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
 
-                <div class="mt-4 flex justify-center">
+                <div class="mt-4 d-flex justify-content-center">
                     {{ $orders->withQueryString()->links() }}
                 </div>
             </div>

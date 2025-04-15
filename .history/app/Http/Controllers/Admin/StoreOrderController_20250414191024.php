@@ -232,8 +232,7 @@ class StoreOrderController extends Controller
         PointTransaction::create([
             'user_id' => $order->user_id,
             'points' => 0, // No points change, just recording status update
-            'transactionable_type' => 'App\\Models\\ProductOrder',
-            'transactionable_id' => $order->id,
+            'order_id' => $order->id,
             'transaction_type' => 'order_status_update',
             'status' => 'completed',
             'description' => 'Order #' . $order->id . ' marked as completed',
@@ -310,8 +309,7 @@ class StoreOrderController extends Controller
         PointTransaction::create([
             'user_id' => $order->user_id,
             'points' => 0,
-            'transactionable_type' => 'App\\Models\\ProductOrder',
-            'transactionable_id' => $order->id,
+            'order_id' => $order->id,
             'transaction_type' => 'communication',
             'status' => $order->status,
             'description' => 'Email sent regarding order #' . $order->id . ': ' . $request->subject,

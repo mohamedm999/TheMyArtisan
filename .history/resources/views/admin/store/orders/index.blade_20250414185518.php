@@ -245,15 +245,20 @@
                                     </td>
                                 </tr>
                             @empty
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
                                 <tr>
-                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">No orders found</td>
+                                    <td colspan="8" class="text-center">No orders found</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
 
-                <div class="mt-4 flex justify-center">
+                <div class="mt-4 d-flex justify-content-center">
                     {{ $orders->withQueryString()->links() }}
                 </div>
             </div>
