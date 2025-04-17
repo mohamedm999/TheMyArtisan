@@ -98,7 +98,7 @@ class DashboardController extends Controller
             $role = $user->roles->first() ? $user->roles->first()->name : 'client';
             $activities->push((object)[
                 'title' => 'New ' . ucfirst($role) . ' Registration',
-                'description' => $user->firstname . ' joined the platform',
+                'description' => $user->first . ' joined the platform',
                 'created_at' => $user->created_at,
                 'icon' => $role === 'artisan' ? 'hammer' : 'user'
             ]);
