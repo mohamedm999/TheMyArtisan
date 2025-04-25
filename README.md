@@ -1,64 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# MyArtisan Platform
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+MyArtisan est une plateforme qui connecte des artisans qualifiés avec des clients recherchant des services spécialisés. La plateforme facilite la découverte, la réservation et le paiement de services artisanaux.
 
-## About Laravel
+## Structure du Projet
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Le projet est organisé comme suit :
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Documentation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Tous les livrables du projet sont disponibles dans le dossier `/Documentation` :
 
-## Learning Laravel
+- **Cahier des Charges** - Contient les user stories et exigences fonctionnelles
+- **Conception** - Inclut les diagrammes UML (cas d'utilisation, classes)
+- **Maquette** - Contient les maquettes pour versions desktop et mobile
+- **Présentation** - Contient la présentation du projet et le Scrum Board
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Application
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+L'application est développée avec Laravel (PHP) et suit une architecture MVC:
 
-## Laravel Sponsors
+- **/app** - Logique métier de l'application
+  - **/Console** - Commandes personnalisées
+  - **/Exceptions** - Gestion des erreurs
+  - **/Http** - Contrôleurs et middlewares
+  - **/Models** - Modèles de données
+  - **/Notifications** - Notifications système
+  - **/Observers** - Observateurs pour les modèles
+  - **/Providers** - Fournisseurs de services
+  - **/Repositories** - Accès aux données
+  - **/Services** - Services métier
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- **/config** - Fichiers de configuration
+- **/database** - Migrations et seeders
+- **/public** - Point d'entrée et assets web
+- **/resources** - Views et assets non-compilés
+- **/routes** - Définition des routes
+- **/storage** - Fichiers générés par l'application
+- **/tests** - Tests unitaires et d'intégration
 
-### Premium Partners
+## Installation
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Prérequis
+- PHP >= 7.4
+- Composer
+- MySQL ou MariaDB
+- Node.js et NPM
 
-## Contributing
+### Étapes d'installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Cloner le dépôt :
+   ```
+   git clone https://github.com/mohamedm999/TheMyArtisan.git
+   cd MyArtisan-platform
+   ```
 
-## Code of Conduct
+2. Installer les dépendances :
+   ```
+   composer install
+   npm install
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. Configurer l'environnement :
+   ```
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Security Vulnerabilities
+4. Configurer la base de données dans le fichier `.env`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. Exécuter les migrations :
+   ```
+   php artisan migrate --seed
+   ```
 
-## License
+6. Compiler les assets :
+   ```
+   npm run dev
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+7. Démarrer le serveur de développement :
+   ```
+   php artisan serve
+   ```
+
+## Accès au Projet
+
+- **Application** : http://localhost:8000 après démarrage du serveur local
+- **Documentation** : Disponible dans le dossier `/Documentation`
+- **GitHub** : [https://github.com/mohamedm999/TheMyArtisan](https://github.com/mohamedm999/TheMyArtisan)
+
+## Fonctionnalités Principales
+
+- Inscription et authentification des utilisateurs (clients et artisans)
+- Recherche d'artisans par catégorie et localisation
+- Réservation et paiement de services
+- Système d'évaluation et d'avis
+- Messagerie entre clients et artisans
+- Tableau de bord pour artisans et clients
+- Gestion des disponibilités pour artisans
+- Système de certification des artisans
+- Administration de la plateforme
+
+## Technologies Utilisées
+
+- **Backend** : Laravel (PHP)
+- **Frontend** : Blade, JavaScript, Vue.js
+- **Base de données** : MySQL/MariaDB
+- **Authentification** : Laravel Sanctum
+- **Emails** : Laravel Mail
+- **Files Storage** : Laravel Storage
