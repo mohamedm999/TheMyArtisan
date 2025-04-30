@@ -1,0 +1,125 @@
+# Diagramme de Classes - MyArtisan Platform
+
+## Description
+Ce diagramme présente les principales classes du système MyArtisan et leurs relations.
+
+```
++----------------+       +------------------+      +----------------+
+|    User        |<------|  ArtisanProfile  |      |  Category      |
++----------------+       +------------------+      +----------------+
+| id             |       | id               |      | id             |
+| name           |       | user_id          |      | name           |
+| email          |       | description      |      | description    |
+| password       |       | phone            |      | parent_id      |
+| role_id        |       | address          |      +----------------+
+| created_at     |       | profile_photo    |              ^
+| updated_at     |       | average_rating   |              |
++----------------+       +------------------+      +----------------+
+        ^                        |                 |   Service      |
+        |                        |                 +----------------+
+        |                        v                 | id             |
+        |                +-----------------+       | artisan_id     |
+        |                |  Certification  |       | category_id    |
+        |                +-----------------+       | title          |
+        |                | id              |       | description    |
+        |                | artisan_id      |       | price          |
+        |                | title           |       | duration       |
+        |                | issuer          |       | created_at     |
+        |                | issue_date      |       | updated_at     |
+        |                | expiry_date     |       +----------------+
+        |                | document_path   |
+        |                +-----------------+
+        |
++----------------+       +---------------+        +----------------+
+| ClientProfile  |<------| Booking       |------->|  Review        |
++----------------+       +---------------+        +----------------+
+| id             |       | id            |        | id             |
+| user_id        |       | client_id     |        | booking_id     |
+| bio            |       | artisan_id    |        | rating         |
+| photo          |       | service_id    |        | comment        |
+| created_at     |       | date_time     |        | created_at     |
+| updated_at     |       | status        |        | updated_at     |
++----------------+       | price         |        +----------------+
+                         | created_at    |
+                         | updated_at    |
+                         +---------------+
+                                |
+                                |
+                                v
+                        +----------------+
+                        | Message        |
+                        +----------------+
+                        | id             |
+                        | booking_id     |
+                        | sender_id      |
+                        | content        |
+                        | read           |
+                        | created_at     |
+                        | updated_at     |
+                        +----------------+
+```
+
+## Classes principales
+
+### User
+La classe utilisateur de base avec authentification.
+- **Attributs**: id, name, email, password, role_id, etc.
+- **Relations**:
+  - Un User peut avoir un ArtisanProfile (one-to-one)
+  - Un User peut avoir un ClientProfile (one-to-one)
+
+### ArtisanProfile
+Le profil professionnel d'un artisan.
+- **Attributs**: description, phone, address, profile_photo, average_rating, etc.
+- **Relations**:
+  - Appartient à un User (one-to-one)
+  - Possède plusieurs Services (one-to-many)
+  - Possède plusieurs Certifications (one-to-many)
+  - Possède plusieurs Bookings (one-to-many)
+
+### ClientProfile
+Le profil d'un client.
+- **Attributs**: bio, photo, etc.
+- **Relations**:
+  - Appartient à un User (one-to-one)
+  - Possède plusieurs Bookings (one-to-many)
+
+### Category
+Catégories de services disponibles.
+- **Attributs**: name, description, parent_id
+- **Relations**:
+  - Une Category peut avoir plusieurs Services (one-to-many)
+  - Une Category peut avoir plusieurs sous-catégories (self-referencing)
+
+### Service
+Les services proposés par les artisans.
+- **Attributs**: title, description, price, duration, etc.
+- **Relations**:
+  - Appartient à un ArtisanProfile (many-to-one)
+  - Appartient à une Category (many-to-one)
+  - Utilisé dans plusieurs Bookings (one-to-many)
+
+### Booking
+Réservations entre clients et artisans.
+- **Attributs**: date_time, status, price, etc.
+- **Relations**:
+  - Appartient à un ClientProfile (many-to-one)
+  - Appartient à un ArtisanProfile (many-to-one)
+  - Concerne un Service (many-to-one)
+  - Peut avoir un Review (one-to-one)
+  - Peut avoir plusieurs Messages (one-to-many)
+
+### Review
+Évaluations laissées par les clients.
+- **Attributs**: rating, comment, etc.
+- **Relations**:
+  - Appartient à un Booking (one-to-one)
+
+### Message
+Messages échangés entre artisans et clients.
+- **Attributs**: content, read, etc.
+- **Relations**:
+  - Appartient à un Booking (many-to-one)
+  - A un expéditeur User (many-to-one)
+
+*Note: Ce fichier est un placeholder. Dans un projet réel, ce document serait accompagné d'un fichier image (.png, .jpg, ou .svg) créé avec un outil de modélisation UML comme StarUML, Draw.io, Lucidchart, Visual Paradigm, etc.*

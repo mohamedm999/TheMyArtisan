@@ -1,0 +1,34 @@
+# Conception - MyArtisan Platform
+
+Ce dossier contient les documents de conception pour la plateforme MyArtisan, y compris les diagrammes UML qui illustrent l'architecture et le fonctionnement du système.
+
+## Contenu
+
+### Diagrammes UML
+Le sous-dossier "Diagrammes UML" contient :
+
+- **Diagrammes de cas d'utilisation** : Illustrent les interactions entre les utilisateurs (clients, artisans, administrateurs) et le système
+- **Diagrammes de classes** : Représentent la structure statique du système, montrant les classes, leurs attributs, opérations et les relations entre elles
+- **Diagrammes de séquence** : Montrent les interactions entre objets dans des scénarios spécifiques comme la réservation d'un service
+
+## Principales classes du système
+
+- **User** : Classe de base pour tous les utilisateurs du système
+- **ArtisanProfile** : Représente le profil professionnel d'un artisan
+- **ClientProfile** : Représente le profil d'un client
+- **Service** : Définit les services offerts par les artisans
+- **Booking** : Gère les réservations entre clients et artisans
+- **Review** : Stocke les évaluations et commentaires des clients
+- **Category** : Classifie les différents types de services disponibles
+- **Message** : Gère la communication entre artisans et clients
+- **Payment** : Traite les transactions financières
+
+## Architecture du système
+
+La plateforme MyArtisan utilise une architecture MVC (Modèle-Vue-Contrôleur) basée sur Laravel, avec :
+
+- **Modèles** : Représentent les données et la logique métier
+- **Vues** : Interface utilisateur
+- **Contrôleurs** : Gèrent les requêtes et coordonnent les actions
+
+L'application utilise également des services et repositories pour une meilleure séparation des préoccupations et une maintenance plus facile.

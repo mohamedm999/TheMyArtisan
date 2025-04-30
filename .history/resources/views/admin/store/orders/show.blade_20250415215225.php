@@ -1,0 +1,413 @@
+@extends('layouts.admin')
+
+@section('title', 'Order #' . $order->id)
+
+@section('content')
+    <?php
+    // Fallback values for variables that might be missing - using the correct polymorphic relationship
+    $orderHistory = $orderHistory ?? App\Models\PointTransaction::where('transactionable_type', 'App\\Models\\ProductOrder')->where('transactionable_id', $order->id)->with('user')->orderBy('created_at', 'desc')->get();
+    
+    // Get client's current points if not set
+    $pointsService = app(\App\Services\PointsService::class);
+    $clientPoints = $clientPoints ?? $pointsService->getUserPoints($order->user_id);
+    
+    // Get recent points history for this client if not set
+    $pointsHistory = $pointsHistory ?? App\Models\PointTransaction::where('user_id', $order->user_id)->orderBy('created_at', 'desc')->limit(5)->get();
+    ?>
+    <div class="px-4 py-6">
+        <!-- Page Heading -->
+        <div class="flex flex-wrap items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Order #{{ $order->id }}</h1>
+            <div>
+                <a href="{{ route('admin.store.orders.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 rounded-md font-semibold text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Orders
+                </a>
+            </div>
+        </div>
+
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <button type="button" class="absolute top-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                    <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                </button>
+            </div>
+        @endif
+
+        <div class="flex flex-wrap -mx-4">
+            <!-- Order Details Card -->
+            <div class="w-full lg:w-2/3 px-4 mb-8">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b">
+                        <h2 class="text-lg font-semibold text-blue-600">Order Information</h2>
+                        <span class="order-status">
+                            @if ($order->status == 'pending')
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                            @elseif($order->status == 'processing')
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Processing</span>
+                            @elseif($order->status == 'shipped')
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">Shipped</span>
+                            @elseif($order->status == 'completed')
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                            @elseif($order->status == 'cancelled')
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>
+                            @else
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ $order->status }}</span>
+                            @endif
+                        </span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-wrap -mx-4 mb-6">
+                            <div class="w-full md:w-1/2 px-4 mb-4 md:mb-0">
+                                <h3 class="text-lg font-semibold mb-4">Product Information</h3>
+                                <div class="product-details">
+                                    @if ($order->product)
+                                        <div class="flex">
+                                            <div class="mr-4 flex-shrink-0">
+                                                @if ($order->product->image)
+                                                    <img src="{{ asset('storage/' . $order->product->image) }}"
+                                                        alt="{{ $order->product->name }}" class="w-20 h-20 object-cover border rounded-md">
+                                                @else
+                                                    <div class="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-md">
+                                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <h4 class="font-medium">
+                                                    <a href="{{ route('admin.store.products.show', $order->store_product_id) }}" class="text-blue-600 hover:text-blue-800">
+                                                        {{ $order->product->name }}
+                                                    </a>
+                                                </h4>
+                                                <p class="text-gray-500 text-sm mb-1">
+                                                    {{ $order->product->category ?? 'Uncategorized' }}</p>
+                                                <div class="flex items-center">
+                                                    <div class="mr-3">
+                                                        <span class="font-bold text-blue-600">{{ number_format($order->product->points_cost) }}</span>
+                                                        <span class="text-gray-500 text-sm">points</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="px-2 py-1 text-xs bg-gray-200 rounded-full">x {{ $order->quantity }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                            <div class="flex">
+                                                <svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                                </svg>
+                                                <span class="ml-3">Product no longer exists.</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 px-4">
+                                <h3 class="text-lg font-semibold mb-4">Client Information</h3>
+                                <div class="flex">
+                                    <div class="mr-4 flex-shrink-0">
+                                        @if ($order->user->avatar)
+                                            <img src="{{ asset('storage/' . $order->user->avatar) }}"
+                                                alt="{{ $order->user->firstname }}"
+                                                class="w-14 h-14 rounded-full object-cover border">
+                                        @else
+                                            <div class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                                                <span>{{ substr($order->user->firstname, 0, 1) }}{{ substr($order->user->lastname, 0, 1) }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">
+                                            <a href="{{ route('admin.users.show', $order->user_id) }}" class="text-blue-600 hover:text-blue-800">
+                                                {{ $order->user->firstname }} {{ $order->user->lastname }}
+                                            </a>
+                                        </h4>
+                                        <p class="text-gray-500 text-sm mb-1">{{ $order->user->email }}</p>
+                                        <p class="text-gray-500 text-sm">{{ $order->user->phone ?? 'No phone provided' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-6 border-gray-200">
+                        <div class="w-full">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Order ID</th>
+                                            <td class="px-4 py-3">#{{ $order->id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Ordered</th>
+                                            <td class="px-4 py-3">{{ $order->created_at->format('M d, Y h:i A') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
+                                            <td class="px-4 py-3">{{ $order->updated_at->format('M d, Y h:i A') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <td class="px-4 py-3">
+                                                <div class="status-badges">
+                                                    @if ($order->status == 'pending')
+                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                                    @elseif($order->status == 'processing')
+                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Processing</span>
+                                                    @elseif($order->status == 'shipped')
+                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">Shipped</span>
+                                                    @elseif($order->status == 'completed')
+                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                                                    @elseif($order->status == 'cancelled')
+                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>
+                                                    @else
+                                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ $order->status }}</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                            <td class="px-4 py-3">{{ $order->quantity }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points Spent</th>
+                                            <td class="px-4 py-3"><strong class="text-blue-600">{{ number_format($order->points_spent) }}</strong> points</td>
+                                        </tr>
+                                        @if ($order->shipping_address)
+                                            <tr>
+                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipping Address</th>
+                                                <td class="px-4 py-3">{{ $order->shipping_address }}</td>
+                                            </tr>
+                                        @endif
+                                        @if ($order->notes)
+                                            <tr>
+                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                                                <td class="px-4 py-3">{{ $order->notes }}</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            @if ($order->notes_admin)
+                                <div class="mt-6">
+                                    <h3 class="text-lg font-semibold mb-2">Admin Notes</h3>
+                                    <div class="p-4 bg-gray-50 rounded-md border border-gray-200">
+                                        {{ $order->notes_admin }}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b">
+                        <h2 class="text-lg font-semibold text-blue-600">Order History</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="timeline">
+                            @if ($orderHistory->count() > 0)
+                                <ul class="space-y-4">
+                                    @foreach ($orderHistory as $history)
+                                        <li class="flex">
+                                            <div class="mr-4 mt-1">
+                                                @if ($history->status == 'pending')
+                                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                                @elseif($history->status == 'processing')
+                                                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                                                @elseif($history->status == 'shipped')
+                                                    <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
+                                                @elseif($history->status == 'completed')
+                                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                                @elseif($history->status == 'cancelled')
+                                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                                @else
+                                                    <div class="w-3 h-3 rounded-full bg-gray-500"></div>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="flex justify-between items-center">
+                                                    <span class="font-medium">Status changed to <span class="capitalize">{{ $history->status }}</span></span>
+                                                    <span class="text-sm text-gray-500">{{ $history->created_at->format('M d, Y h:i A') }}</span>
+                                                </div>
+                                                @if ($history->comment)
+                                                    <p class="mt-1 text-gray-600 text-sm">{{ $history->comment }}</p>
+                                                @endif
+                                                @if ($history->user)
+                                                    <small class="text-blue-600 text-xs">By: {{ $history->user->firstname }} {{ $history->user->lastname }}</small>
+                                                @endif
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p class="text-gray-500">No history recorded for this order.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Sidebar -->
+            <div class="w-full lg:w-1/3 px-4 mb-8">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                    <div class="px-6 py-4 bg-gray-50 border-b">
+                        <h2 class="text-lg font-semibold text-blue-600">Order Actions</h2>
+                    </div>
+                    <div class="p-6">
+                        <!-- Status Update Form -->
+                        <form action="{{ route('admin.store.orders.update-status', $order->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Change Order Status</label>
+                                <select name="status" id="status" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
+                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
+                                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Comment (Optional)</label>
+                                <textarea name="comment" id="comment" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" rows="2"></textarea>
+                                <p class="mt-1 text-sm text-gray-500">Add a note about this status change</p>
+                            </div>
+
+                            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Update Status
+                            </button>
+                        </form>
+
+                        <div class="my-6 border-t border-gray-200"></div>
+
+                        <!-- Admin Notes Form -->
+                        <form action="{{ route('admin.store.orders.update-admin-notes', $order->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="notes_admin" class="block text-sm font-medium text-gray-700 mb-1">Admin Notes (Internal only)</label>
+                                <textarea name="notes_admin" id="notes_admin" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" rows="4">{{ $order->notes_admin }}</textarea>
+                                <p class="mt-1 text-sm text-gray-500">These notes are for internal use only and not visible to clients</p>
+                            </div>
+
+                            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                                </svg>
+                                Save Admin Notes
+                            </button>
+                        </form>
+
+                        <div class="my-6 border-t border-gray-200"></div>
+
+                        <div class="quick-actions">
+                            <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
+                            <div class="space-y-3">
+                                @if ($order->status != 'cancelled')
+                                    <form action="{{ route('admin.store.orders.cancel', $order->id) }}" method="POST"
+                                        onsubmit="return confirm('Are you sure you want to cancel this order? This will return points to the client.');">
+                                        @csrf
+                                        <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                            Cancel Order & Return Points
+                                        </button>
+                                    </form>
+                                @endif
+
+                                @if ($order->status != 'completed')
+                                    <form action="{{ route('admin.store.orders.complete', $order->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            Mark as Completed
+                                        </button>
+                                    </form>
+                                @endif
+
+                                <a href="{{ route('admin.store.orders.email', $order->id) }}" class="block text-center w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Email Client
+                                </a>
+
+                                <a href="{{ route('admin.users.show', $order->user_id) }}" class="block text-center w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    View Client Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b">
+                        <h2 class="text-lg font-semibold text-blue-600">Client Points Summary</h2>
+                    </div>
+                    <div class="p-6">
+                        <div>
+                            <h4 class="text-2xl font-bold text-blue-600 mb-2">{{ number_format($clientPoints) }}</h4>
+                            <p class="text-gray-500 mb-4">Current points balance for {{ $order->user->firstname }}</p>
+
+                            <div class="mt-6">
+                                <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-700 mb-3">Recent Points Activity</h3>
+                                <ul class="divide-y divide-gray-200">
+                                    @forelse($pointsHistory as $transaction)
+                                        <li class="py-3 flex justify-between items-center">
+                                            <div>
+                                                <span class="font-medium">
+                                                    @if ($transaction->points > 0)
+                                                        <svg class="w-4 h-4 text-green-500 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    @else
+                                                        <svg class="w-4 h-4 text-red-500 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    @endif
+                                                    {{ $transaction->points > 0 ? '+' : '' }}{{ number_format($transaction->points) }}
+                                                </span>
+                                                <div class="text-xs text-gray-500">{{ $transaction->description }}</div>
+                                            </div>
+                                            <span class="text-xs text-gray-500">{{ $transaction->created_at->format('M d') }}</span>
+                                        </li>
+                                    @empty
+                                        <li class="py-3 text-gray-500">No recent activity</li>
+                                    @endforelse
+                                </ul>
+                            </div>
+
+                            <div class="mt-4">
+                                <a href="{{ route('admin.points.show', $order->user_id) }}" 
+                                   class="block text-center w-full py-2 px-4 border border-blue-300 rounded-md text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Full Points History
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
