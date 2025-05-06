@@ -4,21 +4,38 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    /**
+     * The category repository instance.
+     *
+     * @var CategoryRepositoryInterface
+     */
+    protected $categoryRepository;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @return void
+     */
+    public function __construct(CategoryRepositoryInterface $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
     public function index()
     {
-        $categories = Category::with('parent')->paginate(10);
+        $categories = $this->categoryRepository->getPaginatedCategories(10);
         return view('admin.categories.index', compact('categories'));
     }
 
     public function create()
     {
-        $categories = Category::where('is_active', true)->get();
+        $categories = $this->categoryRepository->getActiveCategories();
         return view('admin.categories.create', compact('categories'));
     }
 
@@ -33,27 +50,12 @@ class CategoryController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-        // Generate slug
-        $slug = Str::slug($request->name);
-
-        // Check if the slug already exists
-        $count = Category::where('slug', $slug)->count();
-        if ($count > 0) {
-            $slug = $slug . '-' . ($count + 1);
-        }
-
         // Handle image upload
-        $imageName = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/categories', $imageName);
-        }
+        $imageName = $this->categoryRepository->handleImageUpload($request);
 
-        // Create category
-        Category::create([
+        // Create category with repository
+        $this->categoryRepository->createCategory([
             'name' => $request->name,
-            'slug' => $slug,
             'description' => $request->description,
             'parent_id' => $request->parent_id,
             'icon' => $request->icon,
@@ -67,7 +69,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $categories = Category::where('id', '!=', $category->id)->where('is_active', true)->get();
+        $categories = $this->categoryRepository->getActiveCategoriesExcept($category->id);
         return view('admin.categories.edit', compact('category', 'categories'));
     }
 
@@ -82,41 +84,18 @@ class CategoryController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-        // Update slug only if name changed
-        if ($category->name !== $request->name) {
-            $slug = Str::slug($request->name);
+        // Handle image upload if needed
+        $imageName = $this->categoryRepository->handleImageUpload($request, $category);
 
-            // Check if the slug already exists
-            $count = Category::where('slug', $slug)->where('id', '!=', $category->id)->count();
-            if ($count > 0) {
-                $slug = $slug . '-' . ($count + 1);
-            }
-
-            $category->slug = $slug;
-        }
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($category->image) {
-                Storage::delete('public/categories/' . $category->image);
-            }
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/categories', $imageName);
-
-            $category->image = $imageName;
-        }
-
-        // Update other fields
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->parent_id = $request->parent_id;
-        $category->icon = $request->icon;
-        $category->is_active = $request->has('is_active');
-
-        $category->save();
+        // Update category with repository
+        $this->categoryRepository->updateCategory($category, [
+            'name' => $request->name,
+            'description' => $request->description,
+            'parent_id' => $request->parent_id,
+            'icon' => $request->icon,
+            'image' => $imageName ?? $category->image, // Keep old image if no new upload
+            'is_active' => $request->has('is_active'),
+        ]);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
@@ -124,31 +103,21 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // Check if category has services
-        if ($category->services()->count() > 0) {
+        // Check if category can be deleted using repository method
+        $canDelete = $this->categoryRepository->canDeleteCategory($category);
+
+        if (!$canDelete['canDelete']) {
             return redirect()->route('admin.categories.index')
-                ->with('error', 'Cannot delete category because it has associated services.');
+                ->with('error', $canDelete['reason']);
         }
 
-        // Check if category has subcategories
-        if ($category->children()->count() > 0) {
+        // Delete category with repository
+        if ($this->categoryRepository->deleteCategory($category)) {
             return redirect()->route('admin.categories.index')
-                ->with('error', 'Cannot delete category because it has subcategories.');
+                ->with('success', 'Category deleted successfully.');
         }
 
-        // Check if category has artisan profiles
-        if ($category->artisanProfiles()->count() > 0) {
-            return redirect()->route('admin.categories.index')
-                ->with('error', 'Cannot delete category because it is associated with artisan profiles.');
-        }
-
-        // Delete image if exists
-        if ($category->image) {
-            Storage::delete('public/categories/' . $category->image);
-        }
-
-        $category->delete();
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Category deleted successfully.');
+            ->with('error', 'Failed to delete category. Please try again.');
     }
 }
